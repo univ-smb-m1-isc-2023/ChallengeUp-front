@@ -8,4 +8,9 @@
     <!-- activity_home.xml : Accueil -->
     <string name="dashboardLabel">Tableau de bord</string>
     <string name="suggestionsLabel">Suggestions</string>
+    <string name="newChallengeLabel">Nouveau challenge</string>
+    <!-- fragment_dashboard.xml : Tableau de bord -->
+    <string name="regularity">Régularité</string>
+    <!-- fragment_suggestions.xml : Suggestions -->
+    <string name="popularChallenges">Challenges populaires</string>
 </resources>
