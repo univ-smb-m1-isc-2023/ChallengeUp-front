@@ -19,7 +19,8 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-        title = "Accueil"
+        // cacher le titre de l'activité par défaut
+        supportActionBar?.hide()
 
         // utiliser ViewPager2 https://developer.android.com/reference/com/google/android/material/tabs/TabLayout
         viewPager = findViewById(R.id.viewPager)

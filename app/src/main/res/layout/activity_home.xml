@@ -7,18 +7,36 @@
     android:orientation="vertical"
     tools:context=".HomeActivity">
 
+    <!-- Titre et barre d'action de la page -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            app:titleCentered="true"
+            app:menu="@menu/home_top_app_bar"
+            app:navigationIcon="@drawable/ic_launcher_background"
+            app:title="Accueil" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Tabs -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/homeTabLayout"
         app:tabMode="fixed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <!-- Fragment sélectionné -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp" />
-    
+
+    <!-- FAB -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/newChallengeFAB"
         android:layout_width="wrap_content"
