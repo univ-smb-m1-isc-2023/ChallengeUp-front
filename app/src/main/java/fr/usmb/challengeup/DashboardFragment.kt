@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import fr.usmb.challengeup.adapter.ChallengeListAdapter
 import fr.usmb.challengeup.entities.Challenge
@@ -44,7 +45,11 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = view.findViewById<RecyclerView>(R.id.challengeList)
-        recyclerView.adapter = ChallengeListAdapter(createTestChallengeList())
+        val challengesList = createTestChallengeList()
+        recyclerView.adapter = ChallengeListAdapter(challengesList)
+
+        val myChallenges = view.findViewById<TextView>(R.id.myChallengesTitle)
+        myChallenges.text = "${challengesList.size} challenge${if(challengesList.size > 1) "s" else ""}"
     }
 
     companion object {
