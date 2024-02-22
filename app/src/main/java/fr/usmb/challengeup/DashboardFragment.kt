@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import fr.usmb.challengeup.adapter.ChallengeListAdapter
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,6 +29,9 @@ class DashboardFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
+        val recyclerView = view?.findViewById<RecyclerView>(R.id.challengeList)
+        //recyclerView.adapter = context?.let { ChallengeListAdapter(it), listOf() }
     }
 
     override fun onCreateView(
