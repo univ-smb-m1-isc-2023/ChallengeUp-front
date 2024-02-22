@@ -13,7 +13,7 @@ import fr.usmb.challengeup.R
 import fr.usmb.challengeup.entities.Periodicity
 
 class ChallengeListAdapter(
-    private val context: Context,
+    //private val context: Context, pas besoin de context ici puisque les cards ne nous emmène pas vers de nouvelles Activities
     private val dataset: List<Challenge>
 ) : RecyclerView.Adapter<ChallengeListAdapter.ChallengeListViewHolder>() {
 
