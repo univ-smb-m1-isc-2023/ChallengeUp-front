@@ -14,4 +14,8 @@
     <string name="myChallenges">Mes challenges</string>
     <!-- fragment_suggestions.xml : Suggestions -->
     <string name="popularChallenges">Challenges populaires</string>
+    <!-- navigation_drawer.xml : Drawer -->
+    <string name="watchProfileDrawer">Consulter un profil via une URL</string>
+    <string name="settingsDrawer">Paramètres</string>
+    <string name="setPublicProfileDrawer">Rendre mon profil public</string>
 </resources>

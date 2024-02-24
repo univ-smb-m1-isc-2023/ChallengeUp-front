@@ -3,9 +3,13 @@ package fr.usmb.challengeup
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import android.widget.Toolbar
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.Tab
 import com.google.android.material.tabs.TabLayoutMediator
@@ -38,5 +42,19 @@ class HomeActivity : AppCompatActivity() {
         TabLayoutMediator(tabLayout, viewPager) {tab, position ->
             tab.text = adapter.getPageTitle(position)
         }.attach()
+
+        val topAppBar = findViewById<MaterialToolbar>(R.id.topAppBar)
+        val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
+        val navigationView = findViewById<NavigationView>(R.id.homeNavigationDrawer)
+
+        topAppBar.setOnClickListener {
+            drawerLayout.open()
+        }
+
+        navigationView.setNavigationItemSelectedListener { menuItem ->
+            menuItem.isChecked = true
+            drawerLayout.close()
+            true
+        }
     }
 }
