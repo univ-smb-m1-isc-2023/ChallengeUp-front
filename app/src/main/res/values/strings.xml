@@ -4,6 +4,7 @@
     <string name="login">Se connecter</string>
     <string name="password">Mot de passe</string>
     <string name="username">Nom d\'utilisateur ou e-mail</string>
+    <string name="stayConnected">Rester connecté</string>
     <string name="logWithGoogle">Se connecter avec Google</string>
     <!-- activity_home.xml : Accueil -->
     <string name="dashboardLabel">Tableau de bord</string>

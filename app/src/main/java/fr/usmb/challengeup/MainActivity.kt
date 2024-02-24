@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
@@ -17,7 +18,7 @@ class MainActivity : AppCompatActivity() {
 
         loginButton.setOnClickListener {
             Snackbar
-                .make(loginButton, "Vous avez cliquer sur \"Se connecter\"", Snackbar.LENGTH_SHORT)
+                .make(loginButton, "Vous avez cliqué sur \"Se connecter\"", Snackbar.LENGTH_SHORT)
                 .show()
         }
 
@@ -25,5 +26,10 @@ class MainActivity : AppCompatActivity() {
             intent = Intent(applicationContext, HomeActivity::class.java)
             startActivity(intent)
         }
+
+        // le bouton "Rester connecté" doit être coché par défaut
+        val stayConnectedSwitch = findViewById<MaterialSwitch>(R.id.stayConnectedSwitch)
+        stayConnectedSwitch.isChecked = true
+        //stayConnectedSwitch.setOnCheckedChangeListener { buttonView, isChecked ->  }
     }
 }
