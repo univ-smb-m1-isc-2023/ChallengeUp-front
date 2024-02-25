@@ -5,7 +5,9 @@
     <string name="password">Mot de passe</string>
     <string name="username">Nom d\'utilisateur ou e-mail</string>
     <string name="stayConnected">Rester connecté</string>
-    <string name="logWithGoogle">Se connecter avec Google</string>
+    <string name="noAccountYet">Vous n\'avez pas de compte ?</string>
+    <string name="createAccount">S\'inscrire</string>
+    <string name="logWithSocialLogin">Se connecter avec Google ou Face de bouc</string>
     <!-- activity_home.xml : Accueil -->
     <string name="dashboardLabel">Tableau de bord</string>
     <string name="suggestionsLabel">Suggestions</string>

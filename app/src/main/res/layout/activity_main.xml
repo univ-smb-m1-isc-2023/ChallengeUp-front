@@ -61,16 +61,38 @@
         android:layout_marginTop="16dp" />
 
     <!-- Pas de compte ? -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textStyle="bold"
+        android:text="@string/noAccountYet"
+        />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
+        android:text="@string/createAccount" />
 
     <!-- Label + FAB
     cf https://www.figma.com/file/E8d4tvLh22XYTVBQtmrs3C/Bullet-Journal?type=design&node-id=0-1&mode=design -->
 
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp" />
+
     <!-- Connexion avec Google -->
     <Button
         style="@style/Widget.Material3.Button.ElevatedButton"
-        android:id="@+id/logWithGoogle"
+        android:id="@+id/logWithSocialLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/logWithGoogle" />
+        android:text="@string/logWithSocialLogin" />
 
 </LinearLayout>

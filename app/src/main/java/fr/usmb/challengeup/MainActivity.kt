@@ -1,6 +1,8 @@
 package fr.usmb.challengeup
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -12,9 +14,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         title = "Connexion"
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         val loginButton = findViewById<Button>(R.id.login)
-        val logWithGoogleButton = findViewById<Button>(R.id.logWithGoogle)
+        val logWithSocialLoginButton = findViewById<Button>(R.id.logWithSocialLogin)
 
         loginButton.setOnClickListener {
             Snackbar
@@ -22,9 +25,11 @@ class MainActivity : AppCompatActivity() {
                 .show()
         }
 
-        logWithGoogleButton.setOnClickListener {
+        logWithSocialLoginButton.setOnClickListener {
             intent = Intent(applicationContext, HomeActivity::class.java)
             startActivity(intent)
+            // une fois connecté, on n'a plus besoin de retourner sur l'activité de connexion donc on la détruit
+            finish()
         }
 
         // le bouton "Rester connecté" doit être coché par défaut
