@@ -26,6 +26,9 @@
             <item
                 android:title="@string/setPublicProfileDrawer"
                 android:checkable="true" />
+            <item
+                android:title="@string/disconnect"
+                android:checkable="true" />
         </menu>
     </item>
 

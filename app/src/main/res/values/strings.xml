@@ -13,10 +13,13 @@
     <!-- fragment_dashboard.xml : Tableau de bord -->
     <string name="regularity">Régularité</string>
     <string name="myChallenges">Mes challenges</string>
+    <string name="removeChallenge">Retirer</string>
+    <string name="declareCompleted">Déclarer accompli</string>
     <!-- fragment_suggestions.xml : Suggestions -->
     <string name="popularChallenges">Challenges populaires</string>
     <!-- navigation_drawer.xml : Drawer -->
     <string name="watchProfileDrawer">Consulter un profil via une URL</string>
     <string name="settingsDrawer">Paramètres</string>
     <string name="setPublicProfileDrawer">Rendre mon profil public</string>
+    <string name="disconnect">Se déconnecter</string>
 </resources>

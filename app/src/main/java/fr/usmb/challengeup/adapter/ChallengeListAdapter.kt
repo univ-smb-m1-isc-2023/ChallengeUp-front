@@ -22,6 +22,7 @@ class ChallengeListAdapter(
         val image : ImageView = view.findViewById(R.id.challengeImage)
         val title : TextView = view.findViewById(R.id.challengeTitle)
         val periodicity : TextView = view.findViewById(R.id.challengePeriodicity)
+        val tag : TextView = view.findViewById(R.id.challengeTag)
         val description : TextView = view.findViewById(R.id.challengeDescription)
     }
 
@@ -35,6 +36,7 @@ class ChallengeListAdapter(
         val challenge : Challenge = dataset[position]
         holder.title.text = challenge.title
         holder.periodicity.text = challenge.periodicity.toString()
+        holder.tag.text = challenge.tag
         holder.description.text = challenge.description
     }
 
