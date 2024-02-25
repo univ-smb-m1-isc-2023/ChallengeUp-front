@@ -23,7 +23,7 @@
                 android:minHeight="?attr/actionBarSize"
                 app:titleCentered="true"
                 app:menu="@menu/home_top_app_bar"
-                app:navigationIcon="@drawable/ic_launcher_background"
+                app:navigationIcon="@drawable/ic_menu"
                 app:title="@string/app_name" />
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -48,6 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:layout_gravity="bottom|end"
+            app:icon="@drawable/ic_outline_edit"
             android:text="@string/newChallengeLabel"/>
 
     </LinearLayout>

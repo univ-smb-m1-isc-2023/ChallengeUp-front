@@ -43,6 +43,7 @@
         android:id="@+id/stayConnectedSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:thumbIcon="@drawable/ic_check"
         android:text="@string/stayConnected" />
 
     <Button
@@ -69,16 +70,16 @@
         android:text="@string/noAccountYet"
         />
 
+    <!-- Label + FAB
+    cf https://www.figma.com/file/E8d4tvLh22XYTVBQtmrs3C/Bullet-Journal?type=design&node-id=0-1&mode=design -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="4dp"
+        app:icon="@drawable/ic_outline_person_add"
         android:text="@string/createAccount" />
-
-    <!-- Label + FAB
-    cf https://www.figma.com/file/E8d4tvLh22XYTVBQtmrs3C/Bullet-Journal?type=design&node-id=0-1&mode=design -->
 
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/divider2"
