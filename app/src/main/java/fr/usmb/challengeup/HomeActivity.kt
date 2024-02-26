@@ -29,7 +29,7 @@ class HomeActivity : AppCompatActivity(), UserFeedbackInterface {
         // utiliser ViewPager2 https://developer.android.com/reference/com/google/android/material/tabs/TabLayout
         viewPager = findViewById(R.id.viewPager)
         tabLayout = findViewById(R.id.homeTabLayout)
-        user = intent.getSerializableExtra("user") as User
+        user = intent.getParcelableExtra<User>("user")!!
 
         val fragmentList : List<Fragment> = listOf(DashboardFragment(), SuggestionsFragment())
         val adapter = ViewPagerAdapter(
@@ -53,10 +53,19 @@ class HomeActivity : AppCompatActivity(), UserFeedbackInterface {
         }
 
         navigationView.setNavigationItemSelectedListener { menuItem ->
-            showSnackbarMessage(topAppBar, user.username, Snackbar.LENGTH_SHORT)
             menuItem.isChecked = true
             drawerLayout.close()
             true
+        }
+
+        topAppBar.setOnMenuItemClickListener { menuItem ->
+            when(menuItem.itemId) {
+                R.id.account -> {
+                    showSnackbarMessage(topAppBar, user.username!!, Snackbar.LENGTH_SHORT)
+                    true
+                }
+                else -> false
+            }
         }
     }
 }

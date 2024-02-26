@@ -12,6 +12,7 @@ import com.google.android.material.progressindicator.CircularProgressIndicator
 import fr.usmb.challengeup.adapter.ChallengeListAdapter
 import fr.usmb.challengeup.entities.Challenge
 import fr.usmb.challengeup.entities.Periodicity
+import kotlin.random.Random
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -47,8 +48,8 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val progressIndicator = view.findViewById<CircularProgressIndicator>(R.id.progressRegularity)
-        val progressAnimator = ValueAnimator.ofInt(0, 79).apply {
-            duration = 2000 // Durée de l'animation en millisecondes
+        val progressAnimator = ValueAnimator.ofInt(0, Random.nextInt(40, 101)).apply {
+            duration = 1500 // Durée de l'animation en millisecondes
             addUpdateListener { animation ->
                 val progress = animation.animatedValue as Int
                 progressIndicator.setProgressCompat(progress, false)
