@@ -6,10 +6,18 @@ import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
+import fr.usmb.challengeup.entities.User
+import fr.usmb.challengeup.network.ConnectionManager
+import fr.usmb.challengeup.utils.UserFeedbackInterface
 
-class MainActivity : AppCompatActivity() {
+/**
+ * Activité de connexion
+ */
+class MainActivity : AppCompatActivity(), UserFeedbackInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -18,23 +26,42 @@ class MainActivity : AppCompatActivity() {
 
         val loginButton = findViewById<Button>(R.id.login)
         val logWithSocialLoginButton = findViewById<Button>(R.id.logWithSocialLogin)
+        val username = findViewById<TextInputEditText>(R.id.usernameValue)
+        val password = findViewById<TextInputEditText>(R.id.passwordValue)
+        val stayConnectedSwitch = findViewById<MaterialSwitch>(R.id.stayConnectedSwitch)
+
+        // le bouton "Rester connecté" doit être coché par défaut
+        stayConnectedSwitch.isChecked = true
+        //stayConnectedSwitch.setOnCheckedChangeListener { buttonView, isChecked ->  }
 
         loginButton.setOnClickListener {
-            Snackbar
-                .make(loginButton, "Vous avez cliqué sur \"Se connecter\"", Snackbar.LENGTH_SHORT)
-                .show()
+            val connectionManager = ConnectionManager(
+                username.text.toString(),
+                password.text.toString(),
+                stayConnectedSwitch.isChecked
+            )
+            val user : User? = connectionManager.doConnection()
+            if (user != null) {
+                showToastMessage(applicationContext, "Connexion réussie", Toast.LENGTH_SHORT)
+                connectionGranted(user)
+            } else {
+                showSnackbarMessage(loginButton, "Il manque des informations...", Snackbar.LENGTH_SHORT)
+            }
         }
 
         logWithSocialLoginButton.setOnClickListener {
-            intent = Intent(applicationContext, HomeActivity::class.java)
-            startActivity(intent)
-            // une fois connecté, on n'a plus besoin de retourner sur l'activité de connexion donc on la détruit
-            finish()
+            connectionGranted(null)
         }
+    }
 
-        // le bouton "Rester connecté" doit être coché par défaut
-        val stayConnectedSwitch = findViewById<MaterialSwitch>(R.id.stayConnectedSwitch)
-        stayConnectedSwitch.isChecked = true
-        //stayConnectedSwitch.setOnCheckedChangeListener { buttonView, isChecked ->  }
+    /**
+     * Connexion réussie et passage à l'accueil de l'application
+     */
+    private fun connectionGranted(user: User?){
+        intent = Intent(applicationContext, HomeActivity::class.java)
+        intent.putExtra("user", user)
+        startActivity(intent)
+        // une fois connecté, on n'a plus besoin de retourner sur l'activité de connexion donc on la détruit
+        finish()
     }
 }

@@ -2,23 +2,23 @@ package fr.usmb.challengeup
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
-import android.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayout.Tab
 import com.google.android.material.tabs.TabLayoutMediator
 import fr.usmb.challengeup.adapter.ViewPagerAdapter
+import fr.usmb.challengeup.entities.User
+import fr.usmb.challengeup.utils.UserFeedbackInterface
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), UserFeedbackInterface {
 
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
+    private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +29,7 @@ class HomeActivity : AppCompatActivity() {
         // utiliser ViewPager2 https://developer.android.com/reference/com/google/android/material/tabs/TabLayout
         viewPager = findViewById(R.id.viewPager)
         tabLayout = findViewById(R.id.homeTabLayout)
+        user = intent.getSerializableExtra("user") as User
 
         val fragmentList : List<Fragment> = listOf(DashboardFragment(), SuggestionsFragment())
         val adapter = ViewPagerAdapter(
@@ -52,6 +53,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         navigationView.setNavigationItemSelectedListener { menuItem ->
+            showSnackbarMessage(topAppBar, user.username, Snackbar.LENGTH_SHORT)
             menuItem.isChecked = true
             drawerLayout.close()
             true

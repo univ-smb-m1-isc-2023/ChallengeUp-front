@@ -1,5 +1,6 @@
 package fr.usmb.challengeup
 
+import android.animation.ValueAnimator
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import fr.usmb.challengeup.adapter.ChallengeListAdapter
 import fr.usmb.challengeup.entities.Challenge
 import fr.usmb.challengeup.entities.Periodicity
@@ -44,6 +46,16 @@ class DashboardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val progressIndicator = view.findViewById<CircularProgressIndicator>(R.id.progressRegularity)
+        val progressAnimator = ValueAnimator.ofInt(0, 79).apply {
+            duration = 2000 // Durée de l'animation en millisecondes
+            addUpdateListener { animation ->
+                val progress = animation.animatedValue as Int
+                progressIndicator.setProgressCompat(progress, false)
+            }
+        }
+        progressAnimator.start()
+
         val recyclerView = view.findViewById<RecyclerView>(R.id.challengeList)
         val challengesList = createTestChallengeList()
         recyclerView.adapter = ChallengeListAdapter(challengesList)

@@ -19,6 +19,7 @@
         app:helperText="toto73 ou example@mail.com">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/usernameValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress|textAutoComplete" />
@@ -33,6 +34,7 @@
         app:endIconMode="password_toggle">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/passwordValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword" />
