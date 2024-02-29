@@ -12,6 +12,10 @@
     <string name="dashboardLabel">Tableau de bord</string>
     <string name="suggestionsLabel">Suggestions</string>
     <string name="newChallengeLabel">Nouveau challenge</string>
+    <!-- activity_new_challenge.xml : Nouveau Challenge -->
+    <string name="daily">Quotidien</string>
+    <string name="weekly">Hebdomadaire</string>
+    <string name="monthly">Mensuel</string>
     <!-- fragment_dashboard.xml : Tableau de bord -->
     <string name="regularity">Régularité</string>
     <string name="myChallenges">Mes challenges</string>
