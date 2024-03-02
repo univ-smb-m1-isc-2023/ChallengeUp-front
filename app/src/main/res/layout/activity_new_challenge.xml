@@ -9,6 +9,58 @@
     android:orientation="vertical"
     tools:context=".NewChallengeActivity">
 
+    <!-- Titre du challenge -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/newChallengeTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:hint="@string/newChallengeTitle"
+        app:endIconMode="clear_text" >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/newChallengeTitleValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textNoSuggestions" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Description du challenge -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/newChallengeDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:hint="@string/newChallengeDescription"
+        app:endIconMode="clear_text" >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/newChallengeDescriptionValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine|textNoSuggestions" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Catégorie du challenge
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/newChallengeTag"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:hint="@string/newChallengeTag" >
+        <AutoCompleteTextView
+            android:id="@+id/newChallengeTagValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            />
+    </com.google.android.material.textfield.TextInputLayout>-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textStyle="bold"
+        android:text="@string/frequency"
+        />
     <!-- Segemented Button : Périodicité -->
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/segmentedButtonPeriodicity"
@@ -36,5 +88,13 @@
             android:text="@string/monthly"
             />
     </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <!-- Validation du challenge -->
+    <Button
+        style="@style/Widget.Material3.Button.ElevatedButton"
+        android:id="@+id/createChallenge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/createChallenge" />
 
 </LinearLayout>
