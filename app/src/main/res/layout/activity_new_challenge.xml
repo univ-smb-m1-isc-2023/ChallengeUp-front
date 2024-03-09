@@ -58,6 +58,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginBottom="4dp"
         android:textStyle="bold"
         android:text="@string/frequency"
         />
@@ -65,7 +66,9 @@
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/segmentedButtonPeriodicity"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:singleSelection="true">
         <Button
             style="?attr/materialButtonOutlinedStyle"
             android:id="@+id/buttonDaily"

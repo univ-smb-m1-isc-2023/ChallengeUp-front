@@ -1,5 +1,8 @@
 package fr.usmb.challengeup.entities
 
+import com.google.gson.Gson
+
+
 enum class Periodicity {
     QUOTIDIEN,
     HEBDOMADAIRE,
@@ -14,4 +17,21 @@ data class Challenge(
     val tag: String,
     val periodicity: Periodicity,
     val description: String
-)
+){
+
+    /**
+     * Renvoyer un challenge jsonifié pour le passer au serveur
+     */
+    fun toJSON(): String {
+        val gson = Gson()
+        return gson.toJson(this)
+    }
+
+    /**
+     * Convertit un JSON en Challenge
+     */
+    fun fromJSON(json: String): Challenge {
+        val gson = Gson()
+        return gson.fromJson(json, Challenge::class.java)
+    }
+}
