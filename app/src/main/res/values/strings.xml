@@ -8,6 +8,11 @@
     <string name="noAccountYet">Vous n\'avez pas de compte ?</string>
     <string name="createAccount">S\'inscrire</string>
     <string name="logWithSocialLogin">Se connecter avec Google ou Face de bouc</string>
+    <!-- activity_new_account.xml : Création de compte -->
+    <string name="email">Adresse e-mail</string>
+    <string name="username2">Nom d\'utilisateur</string>
+    <string name="confirmPassword">Confirmer le mot de passe</string>
+    <string name="finishCreateAccount">Créer un compte</string>
     <!-- activity_home.xml : Accueil -->
     <string name="dashboardLabel">Tableau de bord</string>
     <string name="suggestionsLabel">Suggestions</string>

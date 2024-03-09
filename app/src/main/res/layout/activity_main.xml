@@ -75,6 +75,7 @@
     <!-- Label + FAB
     cf https://www.figma.com/file/E8d4tvLh22XYTVBQtmrs3C/Bullet-Journal?type=design&node-id=0-1&mode=design -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/joinButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"

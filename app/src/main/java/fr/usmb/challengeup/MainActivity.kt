@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
 
         val loginButton = findViewById<Button>(R.id.login)
         val logWithSocialLoginButton = findViewById<Button>(R.id.logWithSocialLogin)
+        val joinButton = findViewById<ExtendedFloatingActionButton>(R.id.joinButton)
         val username = findViewById<TextInputEditText>(R.id.usernameValue)
         val password = findViewById<TextInputEditText>(R.id.passwordValue)
         val stayConnectedSwitch = findViewById<MaterialSwitch>(R.id.stayConnectedSwitch)
@@ -51,6 +53,11 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
 
         logWithSocialLoginButton.setOnClickListener {
             connectionGranted(User(0, "Jean-Eudes", "jean-eudes@mail.fr"))
+        }
+
+        joinButton.setOnClickListener {
+            intent = Intent(applicationContext, NewAccountActivity::class.java)
+            startActivity(intent)
         }
     }
 
