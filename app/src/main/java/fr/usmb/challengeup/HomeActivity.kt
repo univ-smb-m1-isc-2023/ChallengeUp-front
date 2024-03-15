@@ -57,9 +57,17 @@ class HomeActivity : AppCompatActivity(), UserFeedbackInterface {
 
         navigationView.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true
-            if (menuItem.itemId == R.id.disconnectMe) {
-                startActivity(Intent(applicationContext, MainActivity::class.java))
-                finish()
+            when(menuItem.itemId){
+                R.id.disconnectMe -> {
+                    startActivity(Intent(applicationContext, MainActivity::class.java))
+                    finish()
+                }
+                R.id.watchProfileDrawer -> {
+                    intent = Intent(applicationContext, ViewProfileActivity::class.java)
+                    intent.putExtra("user", user)
+                    startActivity(intent)
+                }
+                else -> false
             }
             true
         }
