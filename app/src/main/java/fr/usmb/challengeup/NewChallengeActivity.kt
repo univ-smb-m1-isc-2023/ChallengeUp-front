@@ -3,12 +3,17 @@ package fr.usmb.challengeup
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import fr.usmb.challengeup.entities.Challenge
 import fr.usmb.challengeup.entities.Periodicity
+import fr.usmb.challengeup.network.VolleyCallback
 import fr.usmb.challengeup.utils.UserFeedbackInterface
+import org.json.JSONObject
 
 class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
 
@@ -57,6 +62,31 @@ class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
         val name = findViewById<TextInputEditText>(R.id.newChallengeTitleValue).text.toString()
         val description = findViewById<TextInputEditText>(R.id.newChallengeDescriptionValue).text.toString()
         val newChallenge = Challenge(-1, name, tags[0], periodicity, description)
-        showSnackbarMessage(createChallengeButton, newChallenge.toJSON(), Snackbar.LENGTH_SHORT)
+        createNewChallengeRequest(newChallenge, object : VolleyCallback {
+            override fun onSuccess(result: String) {
+                showSnackbarMessage(createChallengeButton, result, Snackbar.LENGTH_SHORT)
+            }
+            override fun onError() {
+                showSnackbarMessage(createChallengeButton, "Echec de la création du challenge", Snackbar.LENGTH_SHORT)
+            }
+        })
+        //finish()
+    }
+
+    private fun createNewChallengeRequest(challenge: Challenge, callback: VolleyCallback) {
+        val queue = Volley.newRequestQueue(applicationContext)
+        val url = "${getString(R.string.server_domain)}/challenge/create"
+        val jsonChallenge = JSONObject(challenge.toJSON())
+
+        val request = JsonObjectRequest(
+            Request.Method.POST, url, jsonChallenge,
+            { response: JSONObject? ->
+                callback.onSuccess(response.toString())
+            },
+            {
+                callback.onError()
+            })
+
+        queue.add(request)
     }
 }
