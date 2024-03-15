@@ -2,6 +2,7 @@ package fr.usmb.challengeup.entities
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.Gson
 
 data class User(
     val id: Long,
@@ -23,6 +24,14 @@ data class User(
 
     override fun describeContents(): Int {
         return 0
+    }
+
+    fun toJSON(): String {
+        return Gson().toJson(this)
+    }
+
+    fun fromJSON(json: String): User {
+        return Gson().fromJson(json, User::class.java)
     }
 
     companion object CREATOR : Parcelable.Creator<User> {

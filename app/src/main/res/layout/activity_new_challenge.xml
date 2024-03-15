@@ -74,6 +74,7 @@
             android:id="@+id/buttonDaily"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="@string/daily"
             />
         <Button
@@ -81,6 +82,7 @@
             android:id="@+id/buttonWeekly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="@string/weekly"
             />
         <Button
@@ -88,6 +90,7 @@
             android:id="@+id/buttonMonthly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="@string/monthly"
             />
     </com.google.android.material.button.MaterialButtonToggleGroup>

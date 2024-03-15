@@ -40,4 +40,6 @@
     <string name="disconnect">Se déconnecter</string>
     <!-- home_top_app_bar.xml : App bar -->
     <string name="account">Mon compte</string>
+    <!-- Autre -->
+    <string name="server_domain">challenge-up.oups.net</string>
 </resources>

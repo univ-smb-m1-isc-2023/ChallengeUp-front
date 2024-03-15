@@ -79,6 +79,7 @@
             android:layout_margin="8dp"
             android:orientation="horizontal">
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/challengeRemove"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -86,6 +87,7 @@
                 style="?attr/borderlessButtonStyle"
                 />
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/challengeAccomplished"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
