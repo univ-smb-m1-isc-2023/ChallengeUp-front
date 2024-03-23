@@ -45,7 +45,7 @@ class SuggestionsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.suggestedChallengeList)
-        recyclerView.adapter = ChallengeListAdapter(createTestChallengeList())
+        recyclerView.adapter = ChallengeListAdapter(createTestChallengeList(), true)
     }
 
     companion object {
