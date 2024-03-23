@@ -59,7 +59,7 @@ class DashboardFragment : Fragment() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.challengeList)
         val challengesList = createTestChallengeList()
-        recyclerView.adapter = ChallengeListAdapter(challengesList)
+        recyclerView.adapter = ChallengeListAdapter(challengesList, false)
 
         val myChallenges = view.findViewById<TextView>(R.id.myChallengesTitle)
         myChallenges.text = "${challengesList.size} challenge${if(challengesList.size > 1) "s" else ""}"

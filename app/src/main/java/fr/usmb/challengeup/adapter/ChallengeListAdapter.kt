@@ -1,6 +1,5 @@
 package fr.usmb.challengeup.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,13 +11,12 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
 import fr.usmb.challengeup.entities.Challenge
 import fr.usmb.challengeup.R
-import fr.usmb.challengeup.entities.Periodicity
-import fr.usmb.challengeup.entities.User
 import fr.usmb.challengeup.utils.UserFeedbackInterface
 
 class ChallengeListAdapter(
     //private val context: Context, pas besoin de context ici puisque les cards ne nous emmène pas vers de nouvelles Activities
-    private val dataset: List<Challenge>
+    private val dataset: List<Challenge>,
+    private val isSuggestions: Boolean // Savoir si c'est l'adapter du Dashboard ou des Suggestions
 ) : RecyclerView.Adapter<ChallengeListAdapter.ChallengeListViewHolder>(), UserFeedbackInterface {
 
     class ChallengeListViewHolder(private val view: View) : RecyclerView.ViewHolder(view){
@@ -45,12 +43,17 @@ class ChallengeListAdapter(
         holder.tag.text = challenge.tag
         holder.description.text = challenge.description
 
+        if (isSuggestions) {
+            holder.removeButton.text = "Signaler"
+            holder.accomplishedButton.text = "Souscrire"
+        }
+
         holder.removeButton.setOnClickListener {
-            showSnackbarMessage(holder.title, "Retirer", Snackbar.LENGTH_SHORT)
+            showSnackbarMessage(holder.title, holder.removeButton.text.toString(), Snackbar.LENGTH_SHORT)
         }
         
         holder.accomplishedButton.setOnClickListener {
-            showSnackbarMessage(holder.title, "Accompli", Snackbar.LENGTH_SHORT)
+            showSnackbarMessage(holder.title, holder.accomplishedButton.text.toString(), Snackbar.LENGTH_SHORT)
         }
     }
 
