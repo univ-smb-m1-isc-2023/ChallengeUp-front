@@ -3,17 +3,21 @@ package fr.usmb.challengeup
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import fr.usmb.challengeup.adapter.ViewPagerAdapter
 import fr.usmb.challengeup.entities.User
+import fr.usmb.challengeup.network.ConnectionManager
 import fr.usmb.challengeup.utils.UserFeedbackInterface
 
 class HomeActivity : AppCompatActivity(), UserFeedbackInterface {
@@ -63,9 +67,11 @@ class HomeActivity : AppCompatActivity(), UserFeedbackInterface {
                     finish()
                 }
                 R.id.watchProfileDrawer -> {
-                    intent = Intent(applicationContext, ViewProfileActivity::class.java)
-                    intent.putExtra("user", user)
-                    startActivity(intent)
+                    showDialog()
+                }
+                R.id.setMyProfilePublic -> {
+                    val cm = ConnectionManager("", "", false)
+                    cm.tryConnexion(applicationContext)
                 }
                 else -> false
             }
@@ -75,7 +81,9 @@ class HomeActivity : AppCompatActivity(), UserFeedbackInterface {
         topAppBar.setOnMenuItemClickListener { menuItem ->
             when(menuItem.itemId) {
                 R.id.account -> {
-                    showSnackbarMessage(topAppBar, user.username!!, Snackbar.LENGTH_SHORT)
+                    intent = Intent(applicationContext, ViewProfileActivity::class.java)
+                    intent.putExtra("user", user)
+                    startActivity(intent)
                     true
                 }
                 else -> false
@@ -87,4 +95,31 @@ class HomeActivity : AppCompatActivity(), UserFeedbackInterface {
             startActivity(intent)
         }
     }
+
+    private fun showDialog() {
+        val textInputLayout = TextInputLayout(this).apply {
+            hint = resources.getString(R.string.username2)
+            boxBackgroundMode = TextInputLayout.BOX_BACKGROUND_OUTLINE
+            prefixText = "@"
+        }
+
+        val editText = TextInputEditText(textInputLayout.context)
+        textInputLayout.addView(editText)
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Consulter un profil")
+            .setMessage("Rentrer le nom d'utilisateur du profil de la personne que vous souhaitez consulter.\n")
+            .setView(textInputLayout)
+            .setNeutralButton("Annuler") { dialog, which ->
+                dialog.dismiss()
+            }
+            .setPositiveButton("Oui") { dialog, which ->
+                val userToVisit = editText.text.toString()
+                showToastMessage(applicationContext, userToVisit, Toast.LENGTH_SHORT)
+                dialog.dismiss()
+            }
+            .setIcon(R.drawable.ic_account_circle)
+            .show()
+    }
+
 }

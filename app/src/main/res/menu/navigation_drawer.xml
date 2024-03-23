@@ -8,14 +8,6 @@
                 android:id="@+id/watchProfileDrawer"
                 android:title="@string/watchProfileDrawer"
                 android:checkable="true"/>
-            <item
-                android:id="@+id/outbox_item"
-                android:title="Titre2"
-                android:checkable="true"/>
-            <item
-                android:id="@+id/favourites_item"
-                android:title="Favoris"
-                android:checkable="true"/>
         </menu>
     </item>
 
@@ -24,6 +16,7 @@
         android:title="@string/settingsDrawer">
         <menu>
             <item
+                android:id="@+id/setMyProfilePublic"
                 android:title="@string/setPublicProfileDrawer"
                 android:checkable="true" />
             <item
