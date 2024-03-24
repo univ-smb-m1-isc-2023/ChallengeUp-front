@@ -6,10 +6,8 @@ import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import android.widget.Toast
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.materialswitch.MaterialSwitch
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import fr.usmb.challengeup.entities.User
 import fr.usmb.challengeup.network.ConnectionManager
@@ -44,10 +42,10 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
             )
             val user : User? = connectionManager.doConnection()
             if (user != null) {
-                showToastMessage(applicationContext, "Connexion réussie", Toast.LENGTH_SHORT)
+                showToastMessage(applicationContext, "Connexion réussie")
                 connectionGranted(user)
             } else {
-                showSnackbarMessage(loginButton, "Il manque des informations...", Snackbar.LENGTH_SHORT)
+                showSnackbarMessage(loginButton, "Il manque des informations...")
             }
         }
 

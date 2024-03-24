@@ -6,11 +6,11 @@ import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 
 interface UserFeedbackInterface {
-    fun showSnackbarMessage(view: View, message: String, duration: Int){
+    fun showSnackbarMessage(view: View, message: String, duration: Int = Snackbar.LENGTH_SHORT){
         Snackbar.make(view, message, duration).show()
     }
 
-    fun showToastMessage(context: Context, message: String, duration: Int){
+    fun showToastMessage(context: Context, message: String, duration: Int = Toast.LENGTH_SHORT){
         Toast.makeText(context, message, duration).show()
     }
 }

@@ -10,7 +10,6 @@ import com.android.volley.toolbox.Volley
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import fr.usmb.challengeup.entities.Challenge
 import fr.usmb.challengeup.entities.Periodicity
@@ -25,7 +24,6 @@ class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_challenge)
-        //supportActionBar?.hide()
         supportActionBar?.setBackgroundDrawable(null)
         title = applicationContext.getString(R.string.newChallengeLabel)
 
@@ -46,7 +44,7 @@ class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
             chip.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     chip.isChipIconVisible = false
-                    showSnackbarMessage(chipGroup, tag.key, Snackbar.LENGTH_SHORT)
+                    showSnackbarMessage(chipGroup, tag.key)
                     tagChosen = tag.key
                 } else chip.isChipIconVisible = true
             }
@@ -70,7 +68,7 @@ class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
             if (tagChosen.isNotEmpty())
                 createNewChallenge(tagChosen, periodicity)
             else
-                showSnackbarMessage(createChallengeButton, "Il manque des informations...", Snackbar.LENGTH_SHORT)
+                showSnackbarMessage(createChallengeButton, "Il manque des informations...")
         }
     }
 
@@ -91,10 +89,10 @@ class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
         val newChallenge = Challenge(null, name, tag, periodicity, description)
         createNewChallengeRequest(newChallenge, object : VolleyCallback {
             override fun onSuccess(result: String) {
-                showSnackbarMessage(createChallengeButton, result, Snackbar.LENGTH_SHORT)
+                showSnackbarMessage(createChallengeButton, result)
             }
             override fun onError() {
-                showSnackbarMessage(createChallengeButton, "Echec de la création du challenge", Snackbar.LENGTH_SHORT)
+                showSnackbarMessage(createChallengeButton, "Echec de la création du challenge")
             }
         })
         //finish()

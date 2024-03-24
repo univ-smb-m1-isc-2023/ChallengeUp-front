@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.LinearLayout
 import com.google.android.material.materialswitch.MaterialSwitch
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import fr.usmb.challengeup.utils.UserFeedbackInterface
 
@@ -36,6 +35,6 @@ class NewAccountActivity : AppCompatActivity(), UserFeedbackInterface {
                 && email.isNotEmpty()
                 && username.isNotEmpty()) "oui" else "non"
 
-        showSnackbarMessage(view, isOk, Snackbar.LENGTH_SHORT)
+        showSnackbarMessage(view, isOk)
     }
 }

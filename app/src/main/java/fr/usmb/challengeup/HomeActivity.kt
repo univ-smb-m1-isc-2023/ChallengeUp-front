@@ -3,7 +3,6 @@ package fr.usmb.challengeup
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
@@ -115,7 +114,7 @@ class HomeActivity : AppCompatActivity(), UserFeedbackInterface {
             }
             .setPositiveButton("Oui") { dialog, which ->
                 val userToVisit = editText.text.toString()
-                showToastMessage(applicationContext, userToVisit, Toast.LENGTH_SHORT)
+                showToastMessage(applicationContext, userToVisit)
                 dialog.dismiss()
             }
             .setIcon(R.drawable.ic_account_circle)
