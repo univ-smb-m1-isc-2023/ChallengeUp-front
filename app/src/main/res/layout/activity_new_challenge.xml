@@ -41,18 +41,22 @@
             android:inputType="textMultiLine|textNoSuggestions" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Catégorie du challenge
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/newChallengeTag"
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-        android:hint="@string/newChallengeTag" >
-        <AutoCompleteTextView
-            android:id="@+id/newChallengeTagValue"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="none"
-            />
-    </com.google.android.material.textfield.TextInputLayout>-->
+    <!-- Catégorie du challenge -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="4dp"
+        android:textStyle="bold"
+        android:text="@string/newChallengeTag"
+        />
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroupTag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Chips can be declared here, or added dynamically. -->
+    </com.google.android.material.chip.ChipGroup>
 
     <TextView
         android:layout_width="wrap_content"

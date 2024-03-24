@@ -12,7 +12,7 @@ enum class Periodicity {
 // pour l'adapter de la RecyclerView, une liste de challenge (ou de challenge suggérés) mais il y a qu'un adapter
 // pour DEUX RecyclerView
 data class Challenge(
-    val id: Long,
+    val id: Long?,
     val title: String,
     val tag: String,
     val periodicity: Periodicity,

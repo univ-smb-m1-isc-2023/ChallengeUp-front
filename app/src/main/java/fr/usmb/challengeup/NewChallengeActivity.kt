@@ -3,10 +3,13 @@ package fr.usmb.challengeup
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import androidx.core.content.ContextCompat
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.button.MaterialButtonToggleGroup
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import fr.usmb.challengeup.entities.Challenge
@@ -26,9 +29,30 @@ class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
         supportActionBar?.setBackgroundDrawable(null)
         title = applicationContext.getString(R.string.newChallengeLabel)
 
-        //val tagTextView = findViewById<TextInputLayout>(R.id.newChallengeTag)
-        val tags = arrayOf("Sport", "Culture", "Cuisine")
-        //(tagTextView.editText as? MaterialAutoCompleteTextView)?.setSimpleItems(tags)
+        val tags = mapOf(
+            "Sport" to R.drawable.ic_sports,
+            "Culture" to R.drawable.ic_book,
+            "Cuisine" to R.drawable.ic_fastfood
+        )
+        val chipGroup = findViewById<ChipGroup>(R.id.chipGroupTag)
+        var tagChosen = ""
+        for (tag in tags) {
+            val chip = Chip(this)
+            chip.text = tag.key
+            chip.chipIcon =  ContextCompat.getDrawable(this, tag.value)
+            chip.isCheckable = true
+            chip.isCheckedIconVisible = true
+            chip.isChipIconVisible = true
+            chip.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    chip.isChipIconVisible = false
+                    showSnackbarMessage(chipGroup, tag.key, Snackbar.LENGTH_SHORT)
+                    tagChosen = tag.key
+                } else chip.isChipIconVisible = true
+            }
+            chipGroup.addView(chip)
+        }
+        chipGroup.isSingleSelection = true
 
         val buttonPeriodicityGroup = findViewById<MaterialButtonToggleGroup>(R.id.segmentedButtonPeriodicity)
         buttonPeriodicityGroup.check(R.id.buttonWeekly) // bouton coché par défaut
@@ -43,7 +67,10 @@ class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
 
         createChallengeButton = findViewById(R.id.createChallenge)
         createChallengeButton.setOnClickListener {
-           createNewChallenge(tags, periodicity)
+            if (tagChosen.isNotEmpty())
+                createNewChallenge(tagChosen, periodicity)
+            else
+                showSnackbarMessage(createChallengeButton, "Il manque des informations...", Snackbar.LENGTH_SHORT)
         }
     }
 
@@ -58,10 +85,10 @@ class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
     /**
      * Instancie le challenge et le post sur le serveur
      */
-    private fun createNewChallenge(tags: Array<String>, periodicity: Periodicity) {
+    private fun createNewChallenge(tag: String, periodicity: Periodicity) {
         val name = findViewById<TextInputEditText>(R.id.newChallengeTitleValue).text.toString()
         val description = findViewById<TextInputEditText>(R.id.newChallengeDescriptionValue).text.toString()
-        val newChallenge = Challenge(-1, name, tags[0], periodicity, description)
+        val newChallenge = Challenge(null, name, tag, periodicity, description)
         createNewChallengeRequest(newChallenge, object : VolleyCallback {
             override fun onSuccess(result: String) {
                 showSnackbarMessage(createChallengeButton, result, Snackbar.LENGTH_SHORT)
