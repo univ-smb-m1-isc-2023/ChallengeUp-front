@@ -1,5 +1,6 @@
 package fr.usmb.challengeup.adapter
 
+import fr.usmb.challengeup.utils.DownloadImageTask
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,6 +43,15 @@ class ChallengeListAdapter(
         holder.periodicity.text = challenge.periodicity.toString()
         holder.tag.text = challenge.tag
         holder.description.text = challenge.description
+        //holder.image.setImageResource(R.drawable.ic_sports)
+        var url: String
+        when (challenge.tag) {
+            "Sport" -> url = "https://editorial.uefa.com/resources/0282-18346af97632-5db8a63e9fa1-1000/previews_-_uefa_champions_league_final_2022_23.jpeg"
+            "Cuisine" -> url = "https://resize.programme-television.org/original/var/premiere/storage/images/tele-7-jours/news-tv/furieux-contre-un-restaurateur-philippe-etchebest-claque-la-porte-de-cauchemar-en-cuisine-ce-mec-n-en-a-rien-a-secouer-4682958/99713581-1-fre-FR/Furieux-contre-un-restaurateur-Philippe-Etchebest-claque-la-porte-de-Cauchemar-en-cuisine-Ce-mec-n-en-a-rien-a-secouer.png"
+            else -> url = "https://i.makeagif.com/media/3-22-2018/HvVz9L.gif"
+        }
+        DownloadImageTask(holder.image).downloadImage(url)
+
 
         if (isSuggestions) {
             holder.removeButton.text = "Signaler"
