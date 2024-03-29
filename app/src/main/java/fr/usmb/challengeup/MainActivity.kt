@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
         }
 
         logWithSocialLoginButton.setOnClickListener {
-            connectionGranted(User(0, "Jean-Eudes", "jean-eudes@mail.fr"))
+            connectionGranted(User(0, "Jean-Eudes", "jean-eudes@mail.fr", null))
         }
 
         joinButton.setOnClickListener {

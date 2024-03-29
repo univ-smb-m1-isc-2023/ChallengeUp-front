@@ -7,10 +7,12 @@ import com.google.gson.Gson
 data class User(
     val id: Long,
     val username: String?,
-    val email: String?
+    val email: String?,
+    val password: String?
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
+        parcel.readString(),
         parcel.readString(),
         parcel.readString()
     ) {
@@ -20,6 +22,7 @@ data class User(
         parcel.writeLong(id)
         parcel.writeString(username)
         parcel.writeString(email)
+        parcel.writeString(password)
     }
 
     override fun describeContents(): Int {
