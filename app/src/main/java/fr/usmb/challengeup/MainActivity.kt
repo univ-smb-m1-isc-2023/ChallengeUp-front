@@ -6,12 +6,17 @@ import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputEditText
 import fr.usmb.challengeup.entities.User
 import fr.usmb.challengeup.network.ConnectionManager
+import fr.usmb.challengeup.network.VolleyCallback
 import fr.usmb.challengeup.utils.UserFeedbackInterface
+import org.json.JSONObject
 
 /**
  * Activité de connexion
@@ -35,15 +40,20 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
         //stayConnectedSwitch.setOnCheckedChangeListener { buttonView, isChecked ->  }
 
         loginButton.setOnClickListener {
-            val connectionManager = ConnectionManager(
-                username.text.toString(),
-                password.text.toString(),
-                stayConnectedSwitch.isChecked
-            )
-            val user : User? = connectionManager.doConnection()
-            if (user != null) {
-                showToastMessage(applicationContext, "Connexion réussie")
-                connectionGranted(user)
+            val username = username.text.toString()
+            val password = password.text.toString()
+
+            if (username.isNotEmpty() && password.isNotEmpty()) {
+                val user = User( 0, username, null, password)
+                connectionRequest(user, object : VolleyCallback {
+                    override fun onSuccess(result: String) {
+                        showToastMessage(applicationContext, "Connexion réussie")
+                        connectionGranted(user)
+                    }
+                    override fun onError() {
+                        showSnackbarMessage(loginButton, "Mauvais nom d'utilisateur ou mot de passe")
+                    }
+                })
             } else {
                 showSnackbarMessage(loginButton, "Il manque des informations...")
             }
@@ -57,6 +67,21 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
             intent = Intent(applicationContext, NewAccountActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun connectionRequest(user: User, callback: VolleyCallback) {
+        val queue = Volley.newRequestQueue(applicationContext)
+        val url = "${getString(R.string.server_domain)}/auth/login"
+
+        val jsonBody = JSONObject(user.toJSON())
+
+        val request = JsonObjectRequest(
+            Request.Method.POST, url, jsonBody,
+            { response -> callback.onSuccess(response.toString())},
+            { callback.onError() }
+        )
+
+        queue.add(request)
     }
 
     /**

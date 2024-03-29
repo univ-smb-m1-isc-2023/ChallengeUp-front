@@ -1,5 +1,6 @@
 package fr.usmb.challengeup
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -44,24 +45,30 @@ class NewAccountActivity : AppCompatActivity(), UserFeedbackInterface {
                 && username.isNotEmpty()
                 )
 
-        if (isValidUser)
-            createAccountReaquest(User(0, username, email, password), object : VolleyCallback {
+        if (isValidUser) {
+            val newUser = User(0, username, email, password)
+            createAccountReaquest(newUser, object : VolleyCallback {
                 override fun onSuccess(result: String) {
                     showToastMessage(applicationContext, result)
+                    intent = Intent(applicationContext, HomeActivity::class.java)
+                    intent.putExtra("user", newUser)
+                    startActivity(intent)
+                    finish()
                 }
 
                 override fun onError() {
-                    showSnackbarMessage(stayConnectedSwitch,
-                        "Un utilisateur avec ce nom d'utilisateur ou cet email existe déjà")
+                    showSnackbarMessage(
+                        stayConnectedSwitch,
+                        "Un utilisateur avec ce nom d'utilisateur ou cet email existe déjà"
+                    )
                 }
             })
-        else
-            showSnackbarMessage(view, "Il manque des informations ou certaines données sont fausses.")
+        } else showSnackbarMessage(view, "Il manque des informations ou certaines données sont fausses.")
     }
 
     fun createAccountReaquest(user: User, callback: VolleyCallback) {
         val queue = Volley.newRequestQueue(applicationContext)
-        val url = "${getString(R.string.server_domain)}/signup"
+        val url = "${getString(R.string.server_domain)}/auth/signup"
 
         val jsonBody = JSONObject()
         jsonBody.put("username", user.username)
