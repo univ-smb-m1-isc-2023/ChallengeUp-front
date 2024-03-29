@@ -44,7 +44,6 @@ class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
             chip.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
                     chip.isChipIconVisible = false
-                    showSnackbarMessage(chipGroup, tag.key)
                     tagChosen = tag.key
                 } else chip.isChipIconVisible = true
             }

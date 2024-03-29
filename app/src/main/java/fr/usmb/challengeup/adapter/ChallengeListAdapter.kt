@@ -46,9 +46,9 @@ class ChallengeListAdapter(
         //holder.image.setImageResource(R.drawable.ic_sports)
         var url: String
         when (challenge.tag) {
-            "Sport" -> url = "https://editorial.uefa.com/resources/0282-18346af97632-5db8a63e9fa1-1000/previews_-_uefa_champions_league_final_2022_23.jpeg"
+            "Sport" -> url = "https://static.data.gouv.fr/images/2015-01-22/2578753de17a456a85422d14d31ea289/Sport_balles.png"
             "Cuisine" -> url = "https://resize.programme-television.org/original/var/premiere/storage/images/tele-7-jours/news-tv/furieux-contre-un-restaurateur-philippe-etchebest-claque-la-porte-de-cauchemar-en-cuisine-ce-mec-n-en-a-rien-a-secouer-4682958/99713581-1-fre-FR/Furieux-contre-un-restaurateur-Philippe-Etchebest-claque-la-porte-de-Cauchemar-en-cuisine-Ce-mec-n-en-a-rien-a-secouer.png"
-            else -> url = "https://i.makeagif.com/media/3-22-2018/HvVz9L.gif"
+            else -> url = "https://absolumentchats.com/wp-content/uploads/2016/12/35927559_web-1-1.jpg"
         }
         DownloadImageTask(holder.image).downloadImage(url)
 
