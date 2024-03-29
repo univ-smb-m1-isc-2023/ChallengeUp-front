@@ -1,6 +1,8 @@
 package fr.usmb.challengeup
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
@@ -12,8 +14,8 @@ import com.android.volley.toolbox.Volley
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputEditText
+import com.google.gson.Gson
 import fr.usmb.challengeup.entities.User
-import fr.usmb.challengeup.network.ConnectionManager
 import fr.usmb.challengeup.network.VolleyCallback
 import fr.usmb.challengeup.utils.UserFeedbackInterface
 import org.json.JSONObject
@@ -88,10 +90,32 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
      * Connexion réussie et passage à l'accueil de l'application
      */
     private fun connectionGranted(user: User?){
+        val stayConnectedSwitch = findViewById<MaterialSwitch>(R.id.stayConnectedSwitch)
+
+        // Si l'utilsateur à cliquer sur "Rester connécté", on l'enregistre dans la mémoire du tél,
+        // sinon, on le supprime
+        if (stayConnectedSwitch.isChecked) user?.let { saveUserToSharedPrefs(it) }
+        else saveUserToSharedPrefs(null)
+
         intent = Intent(applicationContext, HomeActivity::class.java)
         intent.putExtra("user", user)
         startActivity(intent)
         // une fois connecté, on n'a plus besoin de retourner sur l'activité de connexion donc on la détruit
         finish()
+    }
+
+    private fun getUserFromSharedPrefs(): User? {
+        val sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+        val json = sharedPreferences.getString(getString(R.string.preference_user_key), null)
+        val gson = Gson()
+        return gson.fromJson(json, User::class.java)
+    }
+
+    private fun saveUserToSharedPrefs(user: User?) {
+        val sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+        val json = user?.toJSON()
+        editor.putString(getString(R.string.preference_user_key), json)
+        editor.apply()
     }
 }
