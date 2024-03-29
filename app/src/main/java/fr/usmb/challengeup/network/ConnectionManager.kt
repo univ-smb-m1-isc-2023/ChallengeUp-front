@@ -41,30 +41,4 @@ class ConnectionManager(
         // Ajouter la requête à la RequestQueue.
         queue.add(stringRequest)
     }
-
-    fun createUser(ctx: Context, user: User) {
-        val queue = Volley.newRequestQueue(ctx)
-        val url = "$URL_SERVER/signup"
-
-        val jsonBody = JsonObject()
-        jsonBody.addProperty("username", user.username)
-        jsonBody.addProperty("email", user.email)
-        jsonBody.addProperty("password", user.password)
-
-        val stringRequest = object : StringRequest(
-            Method.POST, url,
-            { response -> showToastMessage(ctx, response.toString()) },
-            { err -> showToastMessage(ctx, "Erreur : ${err.message}") }
-        ) {
-            override fun getBodyContentType(): String {
-                return "application/json; charset=utf-8"
-            }
-
-            override fun getBody(): ByteArray {
-                return jsonBody.toString().toByteArray()
-            }
-        }
-
-        queue.add(stringRequest)
-    }
 }
