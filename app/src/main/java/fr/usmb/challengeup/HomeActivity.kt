@@ -1,6 +1,8 @@
 package fr.usmb.challengeup
 
 import android.content.Intent
+import android.os.Build
+import android.os.Build.VERSION
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.drawerlayout.widget.DrawerLayout
@@ -34,7 +36,9 @@ class HomeActivity : AppCompatActivity(), UserFeedbackInterface {
         // utiliser ViewPager2 https://developer.android.com/reference/com/google/android/material/tabs/TabLayout
         viewPager = findViewById(R.id.viewPager)
         tabLayout = findViewById(R.id.homeTabLayout)
-        user = intent.getParcelableExtra<User>("user")!!
+        user = if (VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                    intent.getParcelableExtra("user", User::class.java)!!
+                else intent.getParcelableExtra<User>("user")!!
 
         val fragmentList : List<Fragment> = listOf(DashboardFragment(), SuggestionsFragment())
         val adapter = ViewPagerAdapter(
