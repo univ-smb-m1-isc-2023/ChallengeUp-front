@@ -8,8 +8,9 @@ import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import com.android.volley.Request
-import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.AuthFailureError
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.materialswitch.MaterialSwitch
@@ -46,10 +47,14 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
             val password = password.text.toString()
 
             if (username.isNotEmpty() && password.isNotEmpty()) {
-                val user = User( 0, username, null, password)
+                var user = User( 0, username, null, password)
+                // si on donne un mail plutôt qu'un username
+                if (username.contains("@") && username.contains(".")) {
+                    user = User(0, null, username, password)
+                }
                 connectionRequest(user, object : VolleyCallback {
                     override fun onSuccess(result: String) {
-                        showToastMessage(applicationContext, "Connexion réussie")
+                        showToastMessage(applicationContext, result)
                         connectionGranted(user)
                     }
                     override fun onError() {
@@ -78,11 +83,27 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
         val jsonBody = JSONObject(user.toJSON())
         jsonBody.remove("id")
 
-        val request = JsonObjectRequest(
-            Request.Method.POST, url, jsonBody,
-            { response -> callback.onSuccess(response.toString())},
-            { callback.onError() }
-        )
+        val request: StringRequest = object : StringRequest(
+            Method.POST, url,
+            Response.Listener { response ->
+                callback.onSuccess(response.toString())
+            },
+            Response.ErrorListener { error ->
+                callback.onError()
+                // showToastMessage(applicationContext, error.message.toString())
+            }
+        ) {
+            @Throws(AuthFailureError::class)
+            override fun getBody(): ByteArray {
+                return jsonBody.toString().toByteArray()
+            }
+
+            override fun getHeaders(): Map<String, String> {
+                val headers: MutableMap<String, String> = HashMap()
+                headers["Content-Type"] = "application/json"
+                return headers
+            }
+        }
 
         queue.add(request)
     }
