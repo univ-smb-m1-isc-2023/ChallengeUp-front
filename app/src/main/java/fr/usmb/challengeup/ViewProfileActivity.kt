@@ -16,7 +16,7 @@ class ViewProfileActivity : AppCompatActivity() {
         title = "Profil de ${user.username}"
 
         val profileUsername = findViewById<TextView>(R.id.profileUsername)
-        profileUsername.text = user.username
+        profileUsername.text = "${user.username} d'ID ${user.id}"
     }
 
     /**

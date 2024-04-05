@@ -5,8 +5,10 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.hardware.input.InputManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
@@ -45,16 +47,19 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
         loginButton.setOnClickListener {
             val username = username.text.toString()
             val password = password.text.toString()
+            // cacher le clavier une fois le bouton appuyé
+            (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+                .hideSoftInputFromWindow(loginButton.windowToken, 0)
 
             if (username.isNotEmpty() && password.isNotEmpty()) {
-                var user = User( 0, username, null, password)
+                var user = User(0, username, null, password)
                 // si on donne un mail plutôt qu'un username
                 if (username.contains("@") && username.contains(".")) {
                     user = User(0, null, username, password)
                 }
                 connectionRequest(user, object : VolleyCallback {
                     override fun onSuccess(result: String) {
-                        showToastMessage(applicationContext, result)
+                        user = User(result.toLong(), user.username, user.email, user.password)
                         connectionGranted(user)
                     }
                     override fun onError() {
