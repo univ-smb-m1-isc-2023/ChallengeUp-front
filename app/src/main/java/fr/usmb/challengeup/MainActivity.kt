@@ -76,6 +76,7 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
         val url = "${getString(R.string.server_domain)}/auth/login"
 
         val jsonBody = JSONObject(user.toJSON())
+        jsonBody.remove("id")
 
         val request = JsonObjectRequest(
             Request.Method.POST, url, jsonBody,
