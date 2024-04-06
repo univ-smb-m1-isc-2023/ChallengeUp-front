@@ -12,12 +12,12 @@ import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import fr.usmb.challengeup.adapter.ChallengeListAdapter
 import fr.usmb.challengeup.entities.Challenge
 import fr.usmb.challengeup.entities.Periodicity
-import fr.usmb.challengeup.entities.User
 import fr.usmb.challengeup.network.VolleyCallback
 import fr.usmb.challengeup.utils.UserFeedbackInterface
 import kotlin.random.Random
@@ -90,7 +90,7 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
             }
     }
 
-    private fun getSuggestedChallengesRequest(callback: VolleyCallback) {
+    private fun getMyChallengesRequest(callback: VolleyCallback) {
         val queue = Volley.newRequestQueue(context)
         val url = "${getString(R.string.server_domain)}/challenge/all"
 
@@ -103,7 +103,7 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
     }
 
     /**
-     * Fonction d'essai de la RecyclerView
+     * Fonction d'instanciation de la RecyclerView
      */
     private fun createChallengeList() {
         var listChallenge = listOf(
@@ -118,7 +118,7 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
 
         val listType = object : TypeToken<List<Challenge>>() {}.type // type de la liste
         val gson = Gson()
-        getSuggestedChallengesRequest(object : VolleyCallback {
+        getMyChallengesRequest(object : VolleyCallback {
             override fun onSuccess(result: String) {
                 context?.let {
                     val challengesFromServer = gson.fromJson<List<Challenge>>(result, listType)
@@ -130,6 +130,8 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
                     recyclerView.adapter = ChallengeListAdapter(listChallenge, false)
                     val myChallenges = vue.findViewById<TextView>(R.id.myChallengesTitle)
                     myChallenges.text = "${listChallenge.size} challenge${if(listChallenge.size > 1) "s" else ""}"
+                    val loading = vue.findViewById<LinearProgressIndicator>(R.id.dashboardChallengeListLoading)
+                    loading.hide()
                 }
             }
 
@@ -142,6 +144,8 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
                     recyclerView.adapter = ChallengeListAdapter(listChallenge, false)
                     val myChallenges = vue.findViewById<TextView>(R.id.myChallengesTitle)
                     myChallenges.text = "${listChallenge.size} challenge${if(listChallenge.size > 1) "s" else ""}"
+                    val loading = vue.findViewById<LinearProgressIndicator>(R.id.dashboardChallengeListLoading)
+                    loading.hide()
                 }
             }
         })

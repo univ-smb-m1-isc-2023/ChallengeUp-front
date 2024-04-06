@@ -17,6 +17,11 @@
         android:text="@string/popularChallenges" />
 
     <!-- Liste de challenges suggérés -->
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/suggestionsChallengeListLoading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/suggestedChallengeList"
         android:layout_width="match_parent"
