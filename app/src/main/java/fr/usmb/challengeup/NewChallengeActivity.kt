@@ -13,19 +13,25 @@ import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import fr.usmb.challengeup.entities.Challenge
 import fr.usmb.challengeup.entities.Periodicity
+import fr.usmb.challengeup.entities.User
 import fr.usmb.challengeup.network.VolleyCallback
 import fr.usmb.challengeup.utils.UserFeedbackInterface
+import fr.usmb.challengeup.utils.UserPreferencesManager
 import org.json.JSONObject
 
 class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
 
     private lateinit var createChallengeButton : Button
+    private var user: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_challenge)
         supportActionBar?.setBackgroundDrawable(null)
         title = applicationContext.getString(R.string.newChallengeLabel)
+
+        val userPreferencesManager = UserPreferencesManager(applicationContext)
+        user = userPreferencesManager.getUserFromSharedPrefs()
 
         val tags = mapOf(
             "Sport" to R.drawable.ic_sports,
@@ -65,7 +71,9 @@ class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
         createChallengeButton = findViewById(R.id.createChallenge)
         createChallengeButton.setOnClickListener {
             if (tagChosen.isNotEmpty())
-                createNewChallenge(tagChosen, periodicity)
+                if (user != null)
+                    createNewChallenge(tagChosen, periodicity)
+                else showSnackbarMessage(createChallengeButton, "Utilisateur manquant dans les préférences partagées...")
             else
                 showSnackbarMessage(createChallengeButton, "Il manque des informations...")
         }
@@ -101,6 +109,7 @@ class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
         val queue = Volley.newRequestQueue(applicationContext)
         val url = "${getString(R.string.server_domain)}/challenge/create"
         val jsonChallenge = JSONObject(challenge.toJSON())
+        jsonChallenge.put("user", user)
 
         val request = JsonObjectRequest(
             Request.Method.POST, url, jsonChallenge,
