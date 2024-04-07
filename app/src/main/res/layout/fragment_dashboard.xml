@@ -22,6 +22,7 @@
             android:text="@string/regularity" />
 
         <LinearLayout
+            android:id="@+id/regularityLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -57,8 +58,20 @@
             android:id="@+id/challengeList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingBottom="80dp"
+            android:clipToPadding="false"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     </LinearLayout>
+
+    <!-- FAB -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/newChallengeFAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_gravity="bottom|end"
+        app:icon="@drawable/ic_outline_edit"
+        android:text="@string/newChallengeLabel"/>
 
 </FrameLayout>

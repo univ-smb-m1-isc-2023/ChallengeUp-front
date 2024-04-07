@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -56,7 +55,6 @@ class HomeActivity : AppCompatActivity(), UserFeedbackInterface {
         val topAppBar = findViewById<MaterialToolbar>(R.id.topAppBar)
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
         val navigationView = findViewById<NavigationView>(R.id.homeNavigationDrawer)
-        val newChallengeButton = findViewById<ExtendedFloatingActionButton>(R.id.newChallengeFAB)
 
         topAppBar.setOnClickListener {
             drawerLayout.open()
@@ -91,11 +89,6 @@ class HomeActivity : AppCompatActivity(), UserFeedbackInterface {
                 }
                 else -> false
             }
-        }
-
-        newChallengeButton.setOnClickListener {
-            intent = Intent(applicationContext, NewChallengeActivity::class.java)
-            startActivity(intent)
         }
     }
 

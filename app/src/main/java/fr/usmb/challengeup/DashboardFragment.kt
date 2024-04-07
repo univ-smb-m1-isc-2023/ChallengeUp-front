@@ -1,6 +1,7 @@
 package fr.usmb.challengeup
 
 import android.animation.ValueAnimator
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.gson.Gson
@@ -66,8 +68,32 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
         }
         progressAnimator.start()
 
+        val newChallengeButton = view.findViewById<ExtendedFloatingActionButton>(R.id.newChallengeFAB)
+        newChallengeButton.setOnClickListener {
+            val intent = Intent(context, NewChallengeActivity::class.java)
+            startActivity(intent)
+        }
+
         vue = view
         createChallengeList()
+
+        val recyclerView = view.findViewById<RecyclerView>(R.id.challengeList)
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0) {
+                    // Scroll Down
+                    if (newChallengeButton.isExtended) {
+                        newChallengeButton.shrink()
+                    }
+                } else if (dy < 0) {
+                    // Scroll Up
+                    if (!newChallengeButton.isExtended) {
+                        newChallengeButton.extend()
+                    }
+                }
+            }
+        })
     }
 
     companion object {
