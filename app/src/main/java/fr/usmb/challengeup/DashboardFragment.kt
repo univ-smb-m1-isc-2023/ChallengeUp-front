@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
@@ -77,20 +78,17 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
         vue = view
         createChallengeList()
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.challengeList)
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (dy > 0) {
-                    // Scroll Down
-                    if (newChallengeButton.isExtended) {
-                        newChallengeButton.shrink()
-                    }
-                } else if (dy < 0) {
-                    // Scroll Up
-                    if (!newChallengeButton.isExtended) {
-                        newChallengeButton.extend()
-                    }
+        val nestedScrollView = vue.findViewById<NestedScrollView>(R.id.dashboardNestedScrollView)
+        nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
+            if (scrollY > oldScrollY) {
+                // Scroll Down
+                if (newChallengeButton.isExtended) {
+                    newChallengeButton.shrink()
+                }
+            } else if (scrollY < oldScrollY) {
+                // Scroll Up
+                if (!newChallengeButton.isExtended) {
+                    newChallengeButton.extend()
                 }
             }
         })

@@ -6,63 +6,68 @@
     android:layout_height="match_parent"
     tools:context=".DashboardFragment">
 
-    <!-- Layout "Régularité" -->
-    <LinearLayout
-        android:orientation="vertical"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/dashboardNestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="24dp"
-            android:textAppearance="?attr/textAppearanceHeadlineSmall"
-            android:textColor="?attr/colorOnSurface"
-            android:text="@string/regularity" />
-
+        <!-- Layout "Régularité" -->
         <LinearLayout
-            android:id="@+id/regularityLayout"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <com.google.android.material.progressindicator.CircularProgressIndicator
-                android:id="@+id/progressRegularity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:progress="0" />
+            android:layout_height="match_parent">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="C'est bien, continuez comme cela ! Bravo ! Chouette !"/>
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="24dp"
+                android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                android:textColor="?attr/colorOnSurface"
+                android:text="@string/regularity" />
+
+            <LinearLayout
+                android:id="@+id/regularityLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/progressRegularity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:progress="0" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="C'est bien, continuez comme cela ! Bravo ! Chouette !"/>
+            </LinearLayout>
+
+            <!-- Liste de challenges en cours -->
+            <TextView
+                android:id="@+id/myChallengesTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="24dp"
+                android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                android:textColor="?attr/colorOnSurface"
+                android:text="@string/myChallenges" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/dashboardChallengeListLoading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/challengeList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="80dp"
+                android:clipToPadding="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
         </LinearLayout>
-
-        <!-- Liste de challenges en cours -->
-        <TextView
-            android:id="@+id/myChallengesTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="24dp"
-            android:textAppearance="?attr/textAppearanceHeadlineSmall"
-            android:textColor="?attr/colorOnSurface"
-            android:text="@string/myChallenges" />
-
-        <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/dashboardChallengeListLoading"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:indeterminate="true" />
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/challengeList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="80dp"
-            android:clipToPadding="false"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <!-- FAB -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
