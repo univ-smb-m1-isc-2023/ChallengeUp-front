@@ -16,7 +16,7 @@ import fr.usmb.challengeup.entities.Periodicity
 import fr.usmb.challengeup.entities.User
 import fr.usmb.challengeup.network.VolleyCallback
 import fr.usmb.challengeup.utils.UserFeedbackInterface
-import fr.usmb.challengeup.utils.UserPreferencesManager
+import fr.usmb.challengeup.utils.SharedPreferencesManager
 import org.json.JSONObject
 
 class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
@@ -30,8 +30,8 @@ class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
         supportActionBar?.setBackgroundDrawable(null)
         title = applicationContext.getString(R.string.newChallengeLabel)
 
-        val userPreferencesManager = UserPreferencesManager(applicationContext)
-        user = userPreferencesManager.getUserFromSharedPrefs()
+        val sharedPreferencesManager = SharedPreferencesManager(applicationContext)
+        user = sharedPreferencesManager.getUserFromSharedPrefs()
 
         val tags = mapOf(
             "Sport" to R.drawable.ic_sports,
@@ -109,7 +109,7 @@ class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
         val queue = Volley.newRequestQueue(applicationContext)
         val url = "${getString(R.string.server_domain)}/challenge/create"
         val jsonChallenge = JSONObject(challenge.toJSON())
-        jsonChallenge.put("user", user)
+        jsonChallenge.put("user", user?.toJSON())
 
         val request = JsonObjectRequest(
             Request.Method.POST, url, jsonChallenge,
