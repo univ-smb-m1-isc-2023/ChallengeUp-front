@@ -18,6 +18,7 @@ import com.google.android.material.textfield.TextInputLayout
 import fr.usmb.challengeup.adapter.ViewPagerAdapter
 import fr.usmb.challengeup.entities.User
 import fr.usmb.challengeup.network.ConnectionManager
+import fr.usmb.challengeup.utils.SharedPreferencesManager
 import fr.usmb.challengeup.utils.UserFeedbackInterface
 
 class HomeActivity : AppCompatActivity(), UserFeedbackInterface {
@@ -64,6 +65,8 @@ class HomeActivity : AppCompatActivity(), UserFeedbackInterface {
             menuItem.isChecked = true
             when(menuItem.itemId){
                 R.id.disconnectMe -> {
+                    val sharedPreferencesManager = SharedPreferencesManager(applicationContext)
+                    sharedPreferencesManager.saveStayConnectedToSharedPrefs(false)
                     startActivity(Intent(applicationContext, MainActivity::class.java))
                     finish()
                 }

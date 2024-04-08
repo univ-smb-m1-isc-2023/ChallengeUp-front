@@ -23,7 +23,7 @@ class SharedPreferencesManager(private val context: Context) {
         editor.apply()
     }
 
-    fun getStayConnectedFromSharedPrefs(): Boolean? {
+    fun getStayConnectedFromSharedPrefs(): Boolean {
         return sharedPreferences.getBoolean(context.getString(R.string.preference_stay_connected_key), false)
     }
 

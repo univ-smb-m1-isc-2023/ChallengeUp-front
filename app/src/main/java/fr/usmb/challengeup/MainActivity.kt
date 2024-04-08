@@ -19,6 +19,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.Gson
 import fr.usmb.challengeup.entities.User
 import fr.usmb.challengeup.network.VolleyCallback
+import fr.usmb.challengeup.utils.SharedPreferencesManager
 import fr.usmb.challengeup.utils.UserFeedbackInterface
 import org.json.JSONObject
 
@@ -38,6 +39,8 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
         val username = findViewById<TextInputEditText>(R.id.usernameValue)
         val password = findViewById<TextInputEditText>(R.id.passwordValue)
         val stayConnectedSwitch = findViewById<MaterialSwitch>(R.id.stayConnectedSwitch)
+
+        checkIsAlreadyAuthenticated()
 
         // le bouton "Rester connecté" doit être coché par défaut
         stayConnectedSwitch.isChecked = true
@@ -118,10 +121,11 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
     private fun connectionGranted(user: User?){
         val stayConnectedSwitch = findViewById<MaterialSwitch>(R.id.stayConnectedSwitch)
 
-        // Si l'utilsateur à cliquer sur "Rester connécté", on l'enregistre dans la mémoire du tél,
-        // sinon, on le supprime
-        if (stayConnectedSwitch.isChecked) user?.let { saveUserToSharedPrefs(it) }
-        else saveUserToSharedPrefs(null)
+        // Si l'utilsateur à cliquer sur "Rester connécté", on enregistre un booléen dans la mémoire du tél,
+        // sinon, on le passe à false
+        val sharedPreferencesManager = SharedPreferencesManager(applicationContext)
+        sharedPreferencesManager.saveStayConnectedToSharedPrefs(stayConnectedSwitch.isChecked)
+        user?.let { sharedPreferencesManager.saveUserToSharedPrefs(it) }
 
         intent = Intent(applicationContext, HomeActivity::class.java)
         intent.putExtra("user", user)
@@ -130,18 +134,18 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
         finish()
     }
 
-    private fun getUserFromSharedPrefs(): User? {
-        val sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-        val json = sharedPreferences.getString(getString(R.string.preference_user_key), null)
-        val gson = Gson()
-        return gson.fromJson(json, User::class.java)
-    }
-
-    private fun saveUserToSharedPrefs(user: User?) {
-        val sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-        val editor: SharedPreferences.Editor = sharedPreferences.edit()
-        val json = user?.toJSON()
-        editor.putString(getString(R.string.preference_user_key), json)
-        editor.apply()
+    /**
+     * Vérifie si l'utilisateur avait coché "Rester connecté"
+     * Auquel cas, on le connecte directement en récupérant les données dans les préférences partagées
+     */
+    private fun checkIsAlreadyAuthenticated() {
+        val sharedPreferencesManager = SharedPreferencesManager(applicationContext)
+        if (sharedPreferencesManager.getStayConnectedFromSharedPrefs()) {
+            val user: User? = sharedPreferencesManager.getUserFromSharedPrefs()
+            intent = Intent(applicationContext, HomeActivity::class.java)
+            intent.putExtra("user", user)
+            startActivity(intent)
+            finish()
+        }
     }
 }
