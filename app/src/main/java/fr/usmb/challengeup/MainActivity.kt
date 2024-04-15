@@ -2,7 +2,6 @@ package fr.usmb.challengeup
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
@@ -16,7 +15,6 @@ import com.android.volley.toolbox.Volley
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputEditText
-import com.google.gson.Gson
 import fr.usmb.challengeup.entities.User
 import fr.usmb.challengeup.network.VolleyCallback
 import fr.usmb.challengeup.utils.SharedPreferencesManager
@@ -95,7 +93,7 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
             Response.Listener { response ->
                 callback.onSuccess(response.toString())
             },
-            Response.ErrorListener { error ->
+            Response.ErrorListener {
                 callback.onError()
                 // showToastMessage(applicationContext, error.message.toString())
             }

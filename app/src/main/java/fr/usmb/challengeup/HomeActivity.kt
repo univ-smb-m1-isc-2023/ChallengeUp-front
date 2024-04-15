@@ -1,10 +1,13 @@
 package fr.usmb.challengeup
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Build.VERSION
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.StyleSpan
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
@@ -20,8 +23,6 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import fr.usmb.challengeup.adapter.ViewPagerAdapter
 import fr.usmb.challengeup.entities.User
-import fr.usmb.challengeup.network.ConnectionManager
-import fr.usmb.challengeup.network.VolleyCallback
 import fr.usmb.challengeup.utils.SharedPreferencesManager
 import fr.usmb.challengeup.utils.UserFeedbackInterface
 
@@ -65,6 +66,13 @@ class HomeActivity : AppCompatActivity(), UserFeedbackInterface {
             drawerLayout.open()
         }
 
+        // mise en gras des titres du NavigationDrawer
+        for (i in 0 until navigationView.menu.size()){
+            val menuItem = navigationView.menu.getItem(i)
+            val spannableString = SpannableString(menuItem.title)
+            spannableString.setSpan(StyleSpan(Typeface.BOLD_ITALIC), 0, spannableString.length, 0)
+            menuItem.title = spannableString
+        }
         navigationView.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true
             when(menuItem.itemId){
@@ -131,7 +139,7 @@ class HomeActivity : AppCompatActivity(), UserFeedbackInterface {
 
         val request = StringRequest(
             Request.Method.PUT, url,
-            { response -> showToastMessage(applicationContext, "Le statut de votre profil a changé.")},
+            { showToastMessage(applicationContext, "Le statut de votre profil a changé.")},
             { showToastMessage(applicationContext, "Une erreur est survenue") }
         )
         queue.add(request)

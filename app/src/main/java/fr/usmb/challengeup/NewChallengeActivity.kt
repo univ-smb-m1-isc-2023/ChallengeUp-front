@@ -60,7 +60,7 @@ class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
         val buttonPeriodicityGroup = findViewById<MaterialButtonToggleGroup>(R.id.segmentedButtonPeriodicity)
         buttonPeriodicityGroup.check(R.id.buttonWeekly) // bouton coché par défaut
         var periodicity = Periodicity.HEBDOMADAIRE
-        buttonPeriodicityGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
+        buttonPeriodicityGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (isChecked) {
                 if (checkedId == R.id.buttonDaily) periodicity = Periodicity.QUOTIDIEN
                 else if (checkedId == R.id.buttonWeekly) periodicity = Periodicity.HEBDOMADAIRE
