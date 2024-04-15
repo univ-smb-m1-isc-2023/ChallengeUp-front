@@ -12,6 +12,7 @@ import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputEditText
 import fr.usmb.challengeup.entities.User
 import fr.usmb.challengeup.network.VolleyCallback
+import fr.usmb.challengeup.utils.SharedPreferencesManager
 import fr.usmb.challengeup.utils.UserFeedbackInterface
 import org.json.JSONObject
 
@@ -46,16 +47,13 @@ class NewAccountActivity : AppCompatActivity(), UserFeedbackInterface {
                 )
 
         if (isValidUser) {
-            val newUser = User(0, username, email, password)
+            var newUser = User(0, username, email, password)
             createAccountRequest(newUser, object : VolleyCallback {
                 override fun onSuccess(result: String) {
+                    newUser = User(result.toLong(), username, email, password)
                     showToastMessage(applicationContext, result)
-                    intent = Intent(applicationContext, HomeActivity::class.java)
-                    intent.putExtra("user", newUser)
-                    startActivity(intent)
-                    finish()
+                    connectionGranted(newUser)
                 }
-
                 override fun onError() {
                     showSnackbarMessage(
                         stayConnectedSwitch,
@@ -80,7 +78,25 @@ class NewAccountActivity : AppCompatActivity(), UserFeedbackInterface {
             { response: JSONObject? -> callback.onSuccess(response.toString()) },
             { callback.onError() }
         )
-
         queue.add(request)
+    }
+
+    /**
+     * Connexion et création réussie et passage à l'accueil de l'application
+     */
+    private fun connectionGranted(user: User?){
+        val stayConnectedSwitch = findViewById<MaterialSwitch>(R.id.newAccountStayConnected)
+
+        // Si l'utilsateur à cliquer sur "Rester connécté", on enregistre un booléen dans la mémoire du tél,
+        // sinon, on le passe à false
+        val sharedPreferencesManager = SharedPreferencesManager(applicationContext)
+        sharedPreferencesManager.saveStayConnectedToSharedPrefs(stayConnectedSwitch.isChecked)
+        user?.let { sharedPreferencesManager.saveUserToSharedPrefs(it) }
+
+        intent = Intent(applicationContext, HomeActivity::class.java)
+        intent.putExtra("user", user)
+        startActivity(intent)
+        // une fois connecté, on n'a plus besoin de retourner sur l'activité de connexion donc on la détruit
+        finish()
     }
 }
