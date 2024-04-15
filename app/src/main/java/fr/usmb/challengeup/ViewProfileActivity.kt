@@ -20,12 +20,13 @@ class ViewProfileActivity : AppCompatActivity(), UserFeedbackInterface {
     private lateinit var user: User
     private var regularity: Double = 0.0
     private var email: String = ""
+    private var usernameToVisit: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_profile)
         supportActionBar?.setBackgroundDrawable(null)
-        val usernameToVisit = intent.getStringExtra("viewUser")
+        usernameToVisit = intent.getStringExtra("viewUser")
         if (usernameToVisit == null) {
             val sharedPreferencesManager = SharedPreferencesManager(applicationContext)
             user = sharedPreferencesManager.getUserFromSharedPrefs()!!
@@ -62,7 +63,9 @@ class ViewProfileActivity : AppCompatActivity(), UserFeedbackInterface {
 
     private fun watchProfileRequest(username: String, callback: VolleyCallback) {
         val queue = Volley.newRequestQueue(applicationContext)
-        val url = "${getString(R.string.server_domain)}/user/profile/$username"
+        var url = "${getString(R.string.server_domain)}/user/profile/$username"
+        if (usernameToVisit == null)
+            url = "${getString(R.string.server_domain)}/user/${user.id}"
 
         val request = JsonObjectRequest(url,
             { response: JSONObject -> callback.onSuccess(response.toString()) },
