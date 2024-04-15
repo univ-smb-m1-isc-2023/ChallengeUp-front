@@ -8,6 +8,9 @@ import android.os.Bundle
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
+import com.android.volley.Request
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
@@ -18,6 +21,7 @@ import com.google.android.material.textfield.TextInputLayout
 import fr.usmb.challengeup.adapter.ViewPagerAdapter
 import fr.usmb.challengeup.entities.User
 import fr.usmb.challengeup.network.ConnectionManager
+import fr.usmb.challengeup.network.VolleyCallback
 import fr.usmb.challengeup.utils.SharedPreferencesManager
 import fr.usmb.challengeup.utils.UserFeedbackInterface
 
@@ -74,8 +78,7 @@ class HomeActivity : AppCompatActivity(), UserFeedbackInterface {
                     showDialog()
                 }
                 R.id.setMyProfilePublic -> {
-                    val cm = ConnectionManager("", "", false)
-                    cm.tryConnexion(applicationContext)
+                    toggleUserPublicRequest()
                 }
                 else -> false
             }
@@ -122,4 +125,15 @@ class HomeActivity : AppCompatActivity(), UserFeedbackInterface {
             .show()
     }
 
+    private fun toggleUserPublicRequest() {
+        val queue = Volley.newRequestQueue(applicationContext)
+        val url = "${getString(R.string.server_domain)}/user/public/${user.id}"
+
+        val request = StringRequest(
+            Request.Method.PUT, url,
+            { response -> showToastMessage(applicationContext, "Le statut de votre profil a changé.")},
+            { showToastMessage(applicationContext, "Une erreur est survenue") }
+        )
+        queue.add(request)
+    }
 }
