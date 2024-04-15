@@ -46,4 +46,6 @@
     <string name="preference_stay_connected_key">fr.usmb.challengeup.STAY_CONNECTED</string>
     <!-- Autre -->
     <string name="server_domain">https://challenge-up.oups.net</string>
+    <string name="congratulations">C\'est bien, continuez comme cela ! Bravo ! Chouette !</string>
+    <string name="encouragement">Allez ! On ne se laisse pas abattre ! Il reste des challenges à accomplir !</string>
 </resources>

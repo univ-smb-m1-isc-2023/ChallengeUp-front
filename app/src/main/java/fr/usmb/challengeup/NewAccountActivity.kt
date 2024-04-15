@@ -47,7 +47,7 @@ class NewAccountActivity : AppCompatActivity(), UserFeedbackInterface {
 
         if (isValidUser) {
             val newUser = User(0, username, email, password)
-            createAccountReaquest(newUser, object : VolleyCallback {
+            createAccountRequest(newUser, object : VolleyCallback {
                 override fun onSuccess(result: String) {
                     showToastMessage(applicationContext, result)
                     intent = Intent(applicationContext, HomeActivity::class.java)
@@ -66,7 +66,7 @@ class NewAccountActivity : AppCompatActivity(), UserFeedbackInterface {
         } else showSnackbarMessage(view, "Il manque des informations ou certaines données sont fausses.")
     }
 
-    fun createAccountReaquest(user: User, callback: VolleyCallback) {
+    private fun createAccountRequest(user: User, callback: VolleyCallback) {
         val queue = Volley.newRequestQueue(applicationContext)
         val url = "${getString(R.string.server_domain)}/auth/signup"
 

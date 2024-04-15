@@ -2,6 +2,7 @@ package fr.usmb.challengeup
 
 import android.animation.ValueAnimator
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -59,8 +60,13 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val progressIndicator = view.findViewById<CircularProgressIndicator>(R.id.progressRegularity)
-        val progressAnimator = ValueAnimator.ofInt(0, Random.nextInt(40, 101)).apply {
+        progressIndicator.trackColor = Color.LTGRAY
+        var progessAnimatorValue = Random.nextInt(10, 101)
+        if (progessAnimatorValue < 50) progressIndicator.setIndicatorColor(Color.RED)
+        else progressIndicator.setIndicatorColor(Color.GREEN)
+        val progressAnimator = ValueAnimator.ofInt(0, progessAnimatorValue).apply {
             duration = 1500 // Durée de l'animation en millisecondes
             addUpdateListener { animation ->
                 val progress = animation.animatedValue as Int
@@ -68,6 +74,9 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
             }
         }
         progressAnimator.start()
+
+        val progressComment = view.findViewById<TextView>(R.id.progressComment)
+        if (progessAnimatorValue < 50) progressComment.text = getString(R.string.encouragement)
 
         val newChallengeButton = view.findViewById<ExtendedFloatingActionButton>(R.id.newChallengeFAB)
         newChallengeButton.setOnClickListener {

@@ -1,20 +1,25 @@
 package fr.usmb.challengeup
 
+import android.animation.ValueAnimator
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import fr.usmb.challengeup.entities.User
 import fr.usmb.challengeup.network.VolleyCallback
 import fr.usmb.challengeup.utils.SharedPreferencesManager
 import fr.usmb.challengeup.utils.UserFeedbackInterface
 import org.json.JSONObject
+import kotlin.random.Random
 
 class ViewProfileActivity : AppCompatActivity(), UserFeedbackInterface {
     private lateinit var user: User
+    private var regularity: Double = 0.0
+    private var email: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,15 +35,11 @@ class ViewProfileActivity : AppCompatActivity(), UserFeedbackInterface {
             user = User(-1, usernameToVisit, null, null)
         }
 
-        title = "Profil de ${user.username}"
-
         val profileUsername = findViewById<TextView>(R.id.profileUsername)
-        profileUsername.text = "${user.username} d'ID ${user.id}"
-
         user.username?.let {
             watchProfileRequest(it, object : VolleyCallback {
                 override fun onSuccess(result: String) {
-                    showSnackbarMessage(profileUsername, "Succès de la requête !")
+                    initActivity(JSONObject(result))
                 }
                 override fun onError() {
                     Snackbar.make(profileUsername, "Vous n'avez rien à faire ici", Snackbar.LENGTH_INDEFINITE)
@@ -76,5 +77,35 @@ class ViewProfileActivity : AppCompatActivity(), UserFeedbackInterface {
             }
         )
         queue.add(request)
+    }
+
+    private fun initActivity(jsonUser: JSONObject) {
+        regularity = jsonUser.getDouble("regularity")
+        email = jsonUser.getString("email")
+        title = "Profil de ${user.username}"
+
+        val profileUsername = findViewById<TextView>(R.id.profileUsername)
+        profileUsername.text = "${user.username} #${user.id}"
+        val profileEmail = findViewById<TextView>(R.id.profileEmail)
+        profileEmail.text = email
+        val profileRegularity = findViewById<TextView>(R.id.profileRegularityValue)
+        profileRegularity.text = "${getString(R.string.regularity)} : ${regularity.toInt()} %"
+
+        val progressIndicator = findViewById<CircularProgressIndicator>(R.id.profileProgressRegularity)
+        progressIndicator.trackColor = Color.LTGRAY
+        var progessAnimatorValue = Random.nextInt(10, 101)
+        if (regularity > 0) progessAnimatorValue = regularity.toInt()
+
+        if (progessAnimatorValue < 50) progressIndicator.setIndicatorColor(Color.RED)
+        else progressIndicator.setIndicatorColor(Color.GREEN)
+
+        val progressAnimator = ValueAnimator.ofInt(0, progessAnimatorValue).apply {
+            duration = 1500 // Durée de l'animation en millisecondes
+            addUpdateListener { animation ->
+                val progress = animation.animatedValue as Int
+                progressIndicator.setProgressCompat(progress, false)
+            }
+        }
+        progressAnimator.start()
     }
 }

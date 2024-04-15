@@ -17,4 +17,28 @@
         android:textAppearance="?attr/textAppearanceHeadlineLarge"
         android:text="@string/username" />
 
+    <TextView
+        android:id="@+id/profileEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:textStyle="italic"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        android:text="@string/email" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/profileProgressRegularity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:indicatorSize="96dp"
+        app:trackThickness="16dp"
+        android:progress="10" />
+    <TextView
+        android:id="@+id/profileRegularityValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="italic"
+        android:text="@string/regularity" />
+
 </LinearLayout>
