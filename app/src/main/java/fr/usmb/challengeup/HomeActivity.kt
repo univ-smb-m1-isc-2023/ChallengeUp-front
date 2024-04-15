@@ -86,7 +86,6 @@ class HomeActivity : AppCompatActivity(), UserFeedbackInterface {
             when(menuItem.itemId) {
                 R.id.account -> {
                     intent = Intent(applicationContext, ViewProfileActivity::class.java)
-                    intent.putExtra("user", user)
                     startActivity(intent)
                     true
                 }
@@ -109,12 +108,14 @@ class HomeActivity : AppCompatActivity(), UserFeedbackInterface {
             .setTitle("Consulter un profil")
             .setMessage("Rentrer le nom d'utilisateur du profil de la personne que vous souhaitez consulter.\n")
             .setView(textInputLayout)
-            .setNeutralButton("Annuler") { dialog, which ->
+            .setNeutralButton("Annuler") { dialog, _ ->
                 dialog.dismiss()
             }
-            .setPositiveButton("Oui") { dialog, which ->
+            .setPositiveButton("Consulter") { dialog, _ ->
                 val userToVisit = editText.text.toString()
-                showToastMessage(applicationContext, userToVisit)
+                intent = Intent(applicationContext, ViewProfileActivity::class.java)
+                intent.putExtra("viewUser", userToVisit)
+                startActivity(intent)
                 dialog.dismiss()
             }
             .setIcon(R.drawable.ic_account_circle)

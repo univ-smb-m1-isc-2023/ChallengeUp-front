@@ -96,7 +96,8 @@ class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
         val newChallenge = Challenge(null, name, tag, periodicity, description)
         createNewChallengeRequest(newChallenge, object : VolleyCallback {
             override fun onSuccess(result: String) {
-                showSnackbarMessage(createChallengeButton, result)
+                showSnackbarMessage(createChallengeButton, "Challenge créé.")
+                finish()
             }
             override fun onError() {
                 showSnackbarMessage(createChallengeButton, "Echec de la création du challenge")
@@ -109,7 +110,9 @@ class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
         val queue = Volley.newRequestQueue(applicationContext)
         val url = "${getString(R.string.server_domain)}/challenge/create"
         val jsonChallenge = JSONObject(challenge.toJSON())
-        jsonChallenge.put("user", user?.toJSON())
+        val jsonUser = user?.toJSON()?.let { JSONObject(it) }
+        jsonUser?.remove("password")
+        jsonChallenge.put("user", jsonUser)
 
         val request = JsonObjectRequest(
             Request.Method.POST, url, jsonChallenge,
@@ -117,6 +120,7 @@ class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
                 callback.onSuccess(response.toString())
             },
             {
+                showToastMessage(applicationContext, it.message.toString())
                 callback.onError()
             })
 
