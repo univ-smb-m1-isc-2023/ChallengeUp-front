@@ -2,6 +2,7 @@ package fr.usmb.challengeup
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import androidx.core.content.ContextCompat
 import com.android.volley.Request
@@ -93,7 +94,7 @@ class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
     private fun createNewChallenge(tag: String, periodicity: Periodicity) {
         val name = findViewById<TextInputEditText>(R.id.newChallengeTitleValue).text.toString()
         val description = findViewById<TextInputEditText>(R.id.newChallengeDescriptionValue).text.toString()
-        val newChallenge = Challenge(null, name, tag, periodicity, description)
+        val newChallenge = Challenge(0, name, tag, periodicity, description)
         createNewChallengeRequest(newChallenge, object : VolleyCallback {
             override fun onSuccess(result: String) {
                 showSnackbarMessage(createChallengeButton, "Challenge créé.")
@@ -110,9 +111,12 @@ class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
         val queue = Volley.newRequestQueue(applicationContext)
         val url = "${getString(R.string.server_domain)}/challenge/create"
         val jsonChallenge = JSONObject(challenge.toJSON())
+        jsonChallenge.remove("id")
         val jsonUser = user?.toJSON()?.let { JSONObject(it) }
         jsonUser?.remove("password")
+        jsonUser?.remove("username")
         jsonChallenge.put("user", jsonUser)
+        Log.d("JSON", jsonChallenge.toString(4))
 
         val request = JsonObjectRequest(
             Request.Method.POST, url, jsonChallenge,

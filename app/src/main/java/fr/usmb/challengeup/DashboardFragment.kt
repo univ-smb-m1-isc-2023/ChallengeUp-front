@@ -22,7 +22,9 @@ import com.google.gson.reflect.TypeToken
 import fr.usmb.challengeup.adapter.ChallengeListAdapter
 import fr.usmb.challengeup.entities.Challenge
 import fr.usmb.challengeup.entities.Periodicity
+import fr.usmb.challengeup.entities.User
 import fr.usmb.challengeup.network.VolleyCallback
+import fr.usmb.challengeup.utils.SharedPreferencesManager
 import fr.usmb.challengeup.utils.UserFeedbackInterface
 import kotlin.random.Random
 
@@ -41,6 +43,7 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var vue: View
+    private var user: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +63,11 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val sharedPreferencesManager = context?.let { SharedPreferencesManager(it) }
+        if (sharedPreferencesManager != null) {
+            user = sharedPreferencesManager.getUserFromSharedPrefs()
+        }
 
         val progressIndicator = view.findViewById<CircularProgressIndicator>(R.id.progressRegularity)
         progressIndicator.trackColor = Color.LTGRAY
@@ -125,7 +133,7 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
 
     private fun getMyChallengesRequest(callback: VolleyCallback) {
         val queue = Volley.newRequestQueue(context)
-        val url = "${getString(R.string.server_domain)}/challenge/all"
+        val url = "${getString(R.string.server_domain)}/challenge/user/${user?.id}"
 
         val request = StringRequest(
             Request.Method.GET, url,

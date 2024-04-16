@@ -79,7 +79,7 @@ class SuggestionsFragment : Fragment(), UserFeedbackInterface {
 
     private fun getSuggestedChallengesRequest(callback: VolleyCallback) {
         val queue = Volley.newRequestQueue(context)
-        val url = "${getString(R.string.server_domain)}/challenge/highestProgress"
+        val url = "${getString(R.string.server_domain)}/challenge/all"
 
         val request = StringRequest(
             Request.Method.GET, url,
