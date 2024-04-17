@@ -12,7 +12,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.AuthFailureError
+import com.android.volley.Request
 import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.facebook.*
@@ -180,9 +182,16 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
                 connectionGranted(fbUser)
             }
             override fun onError() {
-                showToastMessage(applicationContext, "Création de compte via FB non implémentée...")
-                // Provisoire :
-                connectionGranted(user)
+                createAccountRequest(user, object : VolleyCallback {
+                    override fun onSuccess(result: String) {
+                        val newFbUser = User(result.toLong(), user.username, user.email, user.password)
+                        connectionGranted(newFbUser)
+                    }
+                    override fun onError() {
+                        val loginButton = findViewById<Button>(R.id.login)
+                        showSnackbarMessage(loginButton, "Une erreur s'est produite, veuillez réessayer")
+                    }
+                })
             }
         })
     }
@@ -253,6 +262,23 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
                 }
             })
             .executeAsync()
+    }
+
+    private fun createAccountRequest(user: User, callback: VolleyCallback) {
+        val queue = Volley.newRequestQueue(applicationContext)
+        val url = "${getString(R.string.server_domain)}/auth/signup"
+
+        val jsonBody = JSONObject()
+        jsonBody.put("username", user.username)
+        jsonBody.put("email", user.email)
+        jsonBody.put("password", user.password)
+
+        val request = JsonObjectRequest(
+            Request.Method.POST, url, jsonBody,
+            { response: JSONObject? -> callback.onSuccess(response.toString()) },
+            { callback.onError() }
+        )
+        queue.add(request)
     }
 
     /**
