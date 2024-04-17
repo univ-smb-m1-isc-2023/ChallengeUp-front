@@ -2,16 +2,26 @@ package fr.usmb.challengeup
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Base64
+import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.facebook.CallbackManager
+import com.facebook.CallbackManager.Factory.create
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
+import com.facebook.login.widget.LoginButton
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.textfield.TextInputEditText
@@ -20,19 +30,27 @@ import fr.usmb.challengeup.network.VolleyCallback
 import fr.usmb.challengeup.utils.SharedPreferencesManager
 import fr.usmb.challengeup.utils.UserFeedbackInterface
 import org.json.JSONObject
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
+
 
 /**
  * Activité de connexion
  */
 class MainActivity : AppCompatActivity(), UserFeedbackInterface {
+    private lateinit var fbCallbackManager: CallbackManager
+    private lateinit var fbLoginManager: LoginManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        // printHashKey()
         title = "Connexion"
         supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         val loginButton = findViewById<Button>(R.id.login)
         val logWithSocialLoginButton = findViewById<Button>(R.id.logWithSocialLogin)
+        val fbLoginButton = findViewById<LoginButton>(R.id.facebookLogin)
         val joinButton = findViewById<ExtendedFloatingActionButton>(R.id.joinButton)
         val username = findViewById<TextInputEditText>(R.id.usernameValue)
         val password = findViewById<TextInputEditText>(R.id.passwordValue)
@@ -79,6 +97,9 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
             intent = Intent(applicationContext, NewAccountActivity::class.java)
             startActivity(intent)
         }
+
+        // Gestion du FB Login
+        fbLogin()
     }
 
     private fun connectionRequest(user: User, callback: VolleyCallback) {
@@ -144,6 +165,53 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
             intent.putExtra("user", user)
             startActivity(intent)
             finish()
+        }
+    }
+
+    /**
+     * Facebook Login
+     */
+    private fun fbLogin() {
+        fbCallbackManager = create()
+        fbLoginManager = LoginManager.getInstance()
+
+        fbLoginManager.registerCallback(fbCallbackManager,
+            object : FacebookCallback<LoginResult> {
+                override fun onSuccess(loginResult: LoginResult) {
+                    // App code
+                }
+
+                override fun onCancel() {
+                    // App code
+                    showToastMessage(applicationContext, "Vous avez annulé")
+                }
+
+                override fun onError(exception: FacebookException) {
+                    // App code
+                }
+            })
+    }
+
+    /**
+     * Pour paramétrer l'application avec le Facebook Login
+     */
+    private fun printHashKey() {
+        // Ajouter du code pour imprimer la clé de hachage
+        try {
+            val info = packageManager.getPackageInfo(
+                "fr.usmb.challengeup",
+                PackageManager.GET_SIGNATURES
+            )
+
+            for (signature in info.signatures) {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+            // Gérer l'exception
+        } catch (e: NoSuchAlgorithmException) {
+            // Gérer l'exception
         }
     }
 }
