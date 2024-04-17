@@ -20,7 +20,7 @@ class ChallengeListAdapter(
     private val isSuggestions: Boolean // Savoir si c'est l'adapter du Dashboard ou des Suggestions
 ) : RecyclerView.Adapter<ChallengeListAdapter.ChallengeListViewHolder>(), UserFeedbackInterface {
 
-    class ChallengeListViewHolder(private val view: View) : RecyclerView.ViewHolder(view){
+    class ChallengeListViewHolder(val view: View) : RecyclerView.ViewHolder(view){
         val cardChallenge : MaterialCardView = view.findViewById(R.id.cardChallenge)
         val image : ImageView = view.findViewById(R.id.challengeImage)
         val title : TextView = view.findViewById(R.id.challengeTitle)
@@ -54,8 +54,8 @@ class ChallengeListAdapter(
 
 
         if (isSuggestions) {
-            holder.removeButton.text = "Signaler"
-            holder.accomplishedButton.text = "Souscrire"
+            holder.removeButton.text = holder.view.context.getString(R.string.report)
+            holder.accomplishedButton.text = holder.view.context.getString(R.string.subscribe)
         }
 
         holder.removeButton.setOnClickListener {

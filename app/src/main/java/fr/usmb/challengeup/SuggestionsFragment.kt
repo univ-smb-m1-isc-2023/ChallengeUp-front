@@ -6,7 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.NetworkResponse
 import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -81,11 +84,16 @@ class SuggestionsFragment : Fragment(), UserFeedbackInterface {
         val queue = Volley.newRequestQueue(context)
         val url = "${getString(R.string.server_domain)}/challenge/all"
 
-        val request = StringRequest(
-            Request.Method.GET, url,
+        val request = object : StringRequest(
+            Method.GET, url,
             { response -> callback.onSuccess(response) },
             { callback.onError() }
-        )
+        ) {
+            override fun parseNetworkResponse(response: NetworkResponse): Response<String> {
+                val str = String(response.data, Charsets.UTF_8)
+                return Response.success(str, HttpHeaderParser.parseCacheHeaders(response))
+            }
+        }
         queue.add(request)
     }
 

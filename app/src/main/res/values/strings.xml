@@ -33,6 +33,8 @@
     <string name="declareCompleted">Déclarer accompli</string>
     <!-- fragment_suggestions.xml : Suggestions -->
     <string name="popularChallenges">Challenges populaires</string>
+    <string name="subscribe">Souscrire</string>
+    <string name="report">Signaler</string>
     <!-- navigation_drawer.xml : Drawer -->
     <string name="watchProfileDrawer">Consulter un profil via une URL</string>
     <string name="settingsDrawer">Paramètres</string>
