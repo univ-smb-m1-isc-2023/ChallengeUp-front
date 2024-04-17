@@ -15,10 +15,8 @@ import com.android.volley.AuthFailureError
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.facebook.CallbackManager
+import com.facebook.*
 import com.facebook.CallbackManager.Factory.create
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
@@ -29,6 +27,7 @@ import fr.usmb.challengeup.entities.User
 import fr.usmb.challengeup.network.VolleyCallback
 import fr.usmb.challengeup.utils.SharedPreferencesManager
 import fr.usmb.challengeup.utils.UserFeedbackInterface
+import org.json.JSONException
 import org.json.JSONObject
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -49,8 +48,6 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
         supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         val loginButton = findViewById<Button>(R.id.login)
-        val logWithSocialLoginButton = findViewById<Button>(R.id.logWithSocialLogin)
-        val fbLoginButton = findViewById<LoginButton>(R.id.facebookLogin)
         val joinButton = findViewById<ExtendedFloatingActionButton>(R.id.joinButton)
         val username = findViewById<TextInputEditText>(R.id.usernameValue)
         val password = findViewById<TextInputEditText>(R.id.passwordValue)
@@ -89,17 +86,18 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
             }
         }
 
-        logWithSocialLoginButton.setOnClickListener {
-            connectionGranted(User(0, "Jean-Eudes", "jean-eudes@mail.fr", null))
-        }
-
         joinButton.setOnClickListener {
             intent = Intent(applicationContext, NewAccountActivity::class.java)
             startActivity(intent)
         }
 
         // Gestion du FB Login
-        fbLogin()
+        facebookLogin()
+
+        // Vérification état connexion Facebook
+        //val accessToken = AccessToken.getCurrentAccessToken()
+        //val isLoggedIn = accessToken != null && !accessToken.isExpired
+
     }
 
     private fun connectionRequest(user: User, callback: VolleyCallback) {
@@ -169,27 +167,92 @@ class MainActivity : AppCompatActivity(), UserFeedbackInterface {
     }
 
     /**
+     * Appelée lorsque l'utilisateur a réussie à se connecter avec Facebook.
+     * Doit créer un compte si l'utilisateur FB n'est pas dans notre base sinon doit l'authentifié
+     */
+    private fun manageConnectionWithFacebook(user: User) {
+        // 1 - Regarde si on a un compte
+        // 2 - Si oui, onSuccess le connecte
+        // 3 - Si non, il faut lui créer un compte dans onError (cf. code NewAccountActivity.kt)
+        connectionRequest(user, object : VolleyCallback {
+            override fun onSuccess(result: String) {
+                val fbUser = User(result.toLong(), user.username, user.email, user.password)
+                connectionGranted(fbUser)
+            }
+            override fun onError() {
+                showToastMessage(applicationContext, "Création de compte via FB non implémentée...")
+                // Provisoire :
+                connectionGranted(user)
+            }
+        })
+    }
+
+    /**
      * Facebook Login
      */
-    private fun fbLogin() {
+    private fun facebookLogin() {
+        val fbLoginButton = findViewById<LoginButton>(R.id.facebookLogin)
+        fbLoginButton.setPermissions("email", "public_profile")
         fbCallbackManager = create()
         fbLoginManager = LoginManager.getInstance()
 
-        fbLoginManager.registerCallback(fbCallbackManager,
+        fbLoginButton.registerCallback(fbCallbackManager,
             object : FacebookCallback<LoginResult> {
-                override fun onSuccess(loginResult: LoginResult) {
-                    // App code
+                override fun onSuccess(result: LoginResult) {
+                    val request = GraphRequest.newMeRequest(
+                        result.accessToken,
+                        object : GraphRequest.GraphJSONObjectCallback {
+                            override fun onCompleted(
+                                obj: JSONObject?,
+                                response: GraphResponse?
+                            ) {
+                                if (obj != null) {
+                                    try {
+                                        val name = obj.getString("name")
+                                        val email = obj.getString("email")
+                                        val fbUserID = obj.getString("id")
+                                        disconnectFromFacebook()
+
+                                        // do action after Facebook login success
+                                        // or call your API
+                                        manageConnectionWithFacebook(User(-5, name, email, fbUserID))
+                                    } catch (e: JSONException) {
+                                        e.printStackTrace()
+                                    } catch (e: NullPointerException) {
+                                        e.printStackTrace()
+                                    }
+                                }
+                            }
+                        })
+                    val parameters = Bundle()
+                    parameters.putString("fields", "id, name, email, gender")
+                    request.parameters = parameters
+                    request.executeAsync()
                 }
 
                 override fun onCancel() {
                     // App code
-                    showToastMessage(applicationContext, "Vous avez annulé")
+                    showToastMessage(applicationContext, "Annulation...")
                 }
 
-                override fun onError(exception: FacebookException) {
-                    // App code
+                override fun onError(error: FacebookException) {
+                    showToastMessage(applicationContext, "Erreur FB : ${error.message}")
                 }
             })
+    }
+
+    private fun disconnectFromFacebook() {
+        val accessToken = AccessToken.getCurrentAccessToken()
+        if (accessToken == null) return // déjà déconnecté
+
+        GraphRequest(accessToken,
+            "/me/permissions", null, HttpMethod.DELETE,
+            object : GraphRequest.Callback {
+                override fun onCompleted(response: GraphResponse) {
+                    LoginManager.getInstance().logOut()
+                }
+            })
+            .executeAsync()
     }
 
     /**

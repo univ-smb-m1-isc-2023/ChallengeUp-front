@@ -100,14 +100,6 @@
         android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp" />
 
-    <!-- Connexion avec Google -->
-    <Button
-        style="@style/Widget.Material3.Button.ElevatedButton"
-        android:id="@+id/logWithSocialLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/logWithSocialLogin" />
-
     <com.facebook.login.widget.LoginButton
         android:id="@+id/facebookLogin"
         android:layout_width="wrap_content"
