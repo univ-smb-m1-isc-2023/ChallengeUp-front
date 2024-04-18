@@ -93,6 +93,23 @@ class ChallengeListAdapter(
         return dataset.size
     }
 
+    /**
+     * Déclarer un challenge accompli
+     */
+    private fun achievement() {
+        val sharedPreferencesManager = SharedPreferencesManager(context)
+        user = sharedPreferencesManager.getUserFromSharedPrefs()
+        achievementRequest(object : VolleyCallback {
+            override fun onSuccess(result: String) {
+                showToastMessage(context, "Challenge complété pour la peridode indiquée.")
+            }
+            override fun onError() {}
+        })
+    }
+
+    /**
+     * S'abonner à un challenge suggéré
+     */
     private fun subscribe(challenge: Challenge) {
         val sharedPreferencesManager = SharedPreferencesManager(context)
         user = sharedPreferencesManager.getUserFromSharedPrefs()
@@ -106,6 +123,14 @@ class ChallengeListAdapter(
         })
     }
 
+    /**
+     * Retirer un challenge de sa liste de challenges
+     */
+    private fun unsubscribe() {}
+
+    /**
+     * Signaler un challenge
+     */
     private fun report(challenge: Challenge) {
         reportRequest(challenge, object : VolleyCallback {
             override fun onSuccess(result: String) {
@@ -123,11 +148,35 @@ class ChallengeListAdapter(
         })
     }
 
+    private fun achievementRequest(callback: VolleyCallback) {
+        val queue = Volley.newRequestQueue(context)
+        val uid = user?.id
+        val url = "${context.getString(R.string.server_domain)}/progress/complete/$uid/true"
+
+        val request = StringRequest(
+            Method.PUT, url,
+            { jsonProgress -> callback.onSuccess(jsonProgress.toString()) },
+            { error ->
+                showToastMessage(context, error.message.toString())
+                callback.onError()
+            }
+        )
+        queue.add(request)
+    }
+
     private fun subscribeRequest(challenge: Challenge, callback: VolleyCallback) {
         val queue = Volley.newRequestQueue(context)
         val uid = user?.id
         val cid = challenge.id
         val url = "${context.getString(R.string.server_domain)}/user/$uid/subscribe/$cid"
+
+        // Manque la création d'un nouveau progès associé à l'utilisateur et à ce challenge côté back
+    }
+
+    private fun unsubscribeRequest(callback: VolleyCallback) {
+        val queue = Volley.newRequestQueue(context)
+
+        // Manque la destruction du progès associé à l'utilisateur et à ce challenge côté back
     }
 
     private fun reportRequest(challenge: Challenge, callback: VolleyCallback) {
