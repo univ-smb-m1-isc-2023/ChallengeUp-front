@@ -176,7 +176,7 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
 
                     // Instanciation de la RecyclerView avec les données de la requête
                     val recyclerView = vue.findViewById<RecyclerView>(R.id.challengeList)
-                    recyclerView.adapter = ChallengeListAdapter(listChallenge, false)
+                    recyclerView.adapter = ChallengeListAdapter(context!!, listChallenge, false)
                     val myChallenges = vue.findViewById<TextView>(R.id.myChallengesTitle)
                     myChallenges.text = "${listChallenge.size} challenge${if(listChallenge.size > 1) "s" else ""}"
                     val loading = vue.findViewById<LinearProgressIndicator>(R.id.dashboardChallengeListLoading)
@@ -190,7 +190,7 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
 
                     // Instanciation de la RecyclerView avec des données bidon si le serveur flanche
                     val recyclerView = vue.findViewById<RecyclerView>(R.id.challengeList)
-                    recyclerView.adapter = ChallengeListAdapter(listChallenge, false)
+                    recyclerView.adapter = ChallengeListAdapter(context!!, listChallenge, false)
                     val myChallenges = vue.findViewById<TextView>(R.id.myChallengesTitle)
                     myChallenges.text = "${listChallenge.size} challenge${if(listChallenge.size > 1) "s" else ""}"
                     val loading = vue.findViewById<LinearProgressIndicator>(R.id.dashboardChallengeListLoading)

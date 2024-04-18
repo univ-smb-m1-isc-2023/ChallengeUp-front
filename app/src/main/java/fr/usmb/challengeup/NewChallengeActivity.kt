@@ -112,6 +112,7 @@ class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
         val url = "${getString(R.string.server_domain)}/challenge/create"
         val jsonChallenge = JSONObject(challenge.toJSON())
         jsonChallenge.remove("id")
+        jsonChallenge.remove("reported")
         val jsonUser = user?.toJSON()?.let { JSONObject(it) }
         jsonUser?.remove("password")
         jsonUser?.remove("username")
