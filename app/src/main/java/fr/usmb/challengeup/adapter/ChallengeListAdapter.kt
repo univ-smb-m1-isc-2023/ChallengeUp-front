@@ -10,6 +10,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.Request.Method
+import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
@@ -51,6 +53,9 @@ class ChallengeListAdapter(
         holder.periodicity.text = challenge.periodicity.toString()
         holder.tag.text = challenge.tag
         holder.description.text = challenge.description
+        // Réinitialisation du bouton et du fond pour éviter le recyclage de vues signalées pour l'affichage de nouvelles vues "saines"
+        holder.cardChallenge.setCardBackgroundColor(Color.WHITE)
+        holder.accomplishedButton.visibility = View.VISIBLE
         //holder.image.setImageResource(R.drawable.ic_sports)
         var url: String
         when (challenge.tag) {
@@ -59,9 +64,6 @@ class ChallengeListAdapter(
             else -> url = "https://absolumentchats.com/wp-content/uploads/2016/12/35927559_web-1-1.jpg"
         }
         DownloadImageTask(holder.image).downloadImage(url)
-
-        if (challenge.reported)
-            holder.cardChallenge.setBackgroundColor(Color.RED)
 
         if (isSuggestions) {
             holder.removeButton.text = holder.view.context.getString(R.string.report)
@@ -78,6 +80,12 @@ class ChallengeListAdapter(
             if (isSuggestions) {
                 subscribe(challenge)
             } else showSnackbarMessage(holder.title, holder.accomplishedButton.text.toString(), Snackbar.LENGTH_SHORT)
+        }
+
+        if (challenge.reported) {
+            holder.cardChallenge.setCardBackgroundColor(Color.parseColor("#50FF0000"))
+            holder.accomplishedButton.visibility = View.GONE
+            holder.title.text = "[SIGNALE] ${holder.title.text}"
         }
     }
 
@@ -99,24 +107,20 @@ class ChallengeListAdapter(
     }
 
     private fun report(challenge: Challenge) {
-        val position = dataset.indexOf(challenge)
-        val newDataset = ArrayList<Challenge>(dataset)
-        /*newDataset.removeAt(position)
-        dataset = newDataset.toList()
-        notifyItemRemoved(position)*/
-        challenge.reported = !challenge.reported
-        newDataset[position] = challenge
-        dataset = newDataset.toList()
-        notifyItemChanged(position)
-
-        /*reportRequest(challenge, object : VolleyCallback {
+        reportRequest(challenge, object : VolleyCallback {
             override fun onSuccess(result: String) {
                 showToastMessage(context, "Ce challenge a bien été signalé")
+                val position = dataset.indexOf(challenge)
+                val newDataset = dataset.toMutableList()
+                challenge.reported = !challenge.reported
+                newDataset[position] = challenge
+                dataset = newDataset.toList()
+                notifyItemChanged(position)
             }
             override fun onError() {
                 showToastMessage(context, "Impossible de signaler ce challenge")
             }
-        })*/
+        })
     }
 
     private fun subscribeRequest(challenge: Challenge, callback: VolleyCallback) {
@@ -130,5 +134,12 @@ class ChallengeListAdapter(
         val queue = Volley.newRequestQueue(context)
         val cid = challenge.id
         val url = "${context.getString(R.string.server_domain)}/challenge/report/$cid"
+
+        val request = StringRequest(
+            Method.PUT, url,
+            { jsonChallenge -> callback.onSuccess(jsonChallenge.toString()) },
+            { callback.onError() }
+        )
+        queue.add(request)
     }
 }
