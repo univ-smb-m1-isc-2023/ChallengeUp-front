@@ -77,7 +77,7 @@ class ChallengeListAdapter(
         holder.accomplishedButton.setOnClickListener {
             if (isSuggestions) {
                 subscribe(challenge)
-            } else showSnackbarMessage(holder.title, "Fonction d'achievement à revoir (mauvaise requête)")
+            } else achievement(challenge)
         }
 
         if (challenge.reported) {
@@ -94,12 +94,13 @@ class ChallengeListAdapter(
     /**
      * Déclarer un challenge accompli
      */
-    private fun achievement() {
+    private fun achievement(challenge: Challenge) {
         val sharedPreferencesManager = SharedPreferencesManager(context)
         user = sharedPreferencesManager.getUserFromSharedPrefs()
-        achievementRequest(object : VolleyCallback {
+        achievementRequest(challenge, object : VolleyCallback {
             override fun onSuccess(result: String) {
                 showToastMessage(context, "Challenge complété pour la peridode indiquée.")
+                updateFromRecyclerView(challenge)
             }
             override fun onError() {}
         })
@@ -155,10 +156,11 @@ class ChallengeListAdapter(
         })
     }
 
-    private fun achievementRequest(callback: VolleyCallback) {
+    private fun achievementRequest(challenge: Challenge, callback: VolleyCallback) {
         val queue = Volley.newRequestQueue(context)
         val uid = user?.id
-        val url = "${context.getString(R.string.server_domain)}/progress/complete/$uid/true"
+        val cid = challenge.id
+        val url = "${context.getString(R.string.server_domain)}/progress/complete/$uid/$cid/true"
 
         val request = StringRequest(
             Method.PUT, url,
