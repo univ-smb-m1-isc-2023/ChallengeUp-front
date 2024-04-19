@@ -109,15 +109,9 @@ class NewChallengeActivity : AppCompatActivity(), UserFeedbackInterface {
 
     private fun createNewChallengeRequest(challenge: Challenge, callback: VolleyCallback) {
         val queue = Volley.newRequestQueue(applicationContext)
-        val url = "${getString(R.string.server_domain)}/challenge/create"
+        val url = "${getString(R.string.server_domain)}/challenge/create/${user?.id}"
         val jsonChallenge = JSONObject(challenge.toJSON())
         jsonChallenge.remove("id")
-        jsonChallenge.remove("reported")
-        val jsonUser = user?.toJSON()?.let { JSONObject(it) }
-        jsonUser?.remove("password")
-        jsonUser?.remove("username")
-        jsonChallenge.put("user", jsonUser)
-        Log.d("JSON", jsonChallenge.toString(4))
 
         val request = JsonObjectRequest(
             Request.Method.POST, url, jsonChallenge,
