@@ -101,6 +101,8 @@ class SuggestionsFragment : Fragment(), UserFeedbackInterface {
      * Fonction d'instanciation de la RecyclerView
      */
     fun createChallengeList() {
+        val loading = vue.findViewById<LinearProgressIndicator>(R.id.suggestionsChallengeListLoading)
+        loading.show()
         var listChallenge = listOf(
             Challenge(1,"Courir 7 km","Sport", Periodicity.QUOTIDIEN, "Faire le tour du pâté de maison..."),
             Challenge(2,"Lire 50 pages par jour","Culture", Periodicity.QUOTIDIEN, "Choisissez un livre et lisez 50 pages chaque jour."),
@@ -123,7 +125,6 @@ class SuggestionsFragment : Fragment(), UserFeedbackInterface {
                     // Instanciation de la RecyclerView avec les données de la requête
                     val recyclerView = vue.findViewById<RecyclerView>(R.id.suggestedChallengeList)
                     recyclerView.adapter = ChallengeListAdapter(context!!, listChallenge, true)
-                    val loading = vue.findViewById<LinearProgressIndicator>(R.id.suggestionsChallengeListLoading)
                     loading.hide()
                 }
             }
@@ -135,7 +136,6 @@ class SuggestionsFragment : Fragment(), UserFeedbackInterface {
                     // Instanciation de la RecyclerView avec des données bidon si le serveur flanche
                     val recyclerView = vue.findViewById<RecyclerView>(R.id.suggestedChallengeList)
                     recyclerView.adapter = ChallengeListAdapter(context!!, listChallenge, false)
-                    val loading = vue.findViewById<LinearProgressIndicator>(R.id.suggestionsChallengeListLoading)
                     loading.hide()
                 }
             }
