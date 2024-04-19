@@ -114,6 +114,7 @@ class ChallengeListAdapter(
         subscribeRequest(challenge, object : VolleyCallback {
             override fun onSuccess(result: String) {
                 showToastMessage(context, "\"${challenge.title}\" a été ajouté à vos challenges.")
+                removeFromRecyclerView(challenge)
             }
             override fun onError() {
                 showToastMessage(context, "Une erreur s'est produite...")
@@ -130,6 +131,7 @@ class ChallengeListAdapter(
         unsubscribeRequest(challenge, object : VolleyCallback {
             override fun onSuccess(result: String) {
                 showToastMessage(context, "\"${challenge.title}\" a été retiré de vos challenges.")
+                removeFromRecyclerView(challenge)
             }
             override fun onError() {
                 showToastMessage(context, "Une erreur s'est produite...")
@@ -144,12 +146,8 @@ class ChallengeListAdapter(
         reportRequest(challenge, object : VolleyCallback {
             override fun onSuccess(result: String) {
                 showToastMessage(context, "Ce challenge a bien été signalé")
-                val position = dataset.indexOf(challenge)
-                val newDataset = dataset.toMutableList()
                 challenge.reported = !challenge.reported
-                newDataset[position] = challenge
-                dataset = newDataset.toList()
-                notifyItemChanged(position)
+                updateFromRecyclerView(challenge)
             }
             override fun onError() {
                 showToastMessage(context, "Impossible de signaler ce challenge")
@@ -218,5 +216,21 @@ class ChallengeListAdapter(
             { callback.onError() }
         )
         queue.add(request)
+    }
+
+    private fun removeFromRecyclerView(challenge: Challenge) {
+        val position = dataset.indexOf(challenge)
+        val newDataset = dataset.toMutableList()
+        newDataset.removeAt(position)
+        dataset = newDataset.toList()
+        notifyItemRemoved(position)
+    }
+
+    private fun updateFromRecyclerView(challenge: Challenge) {
+        val position = dataset.indexOf(challenge)
+        val newDataset = dataset.toMutableList()
+        newDataset[position] = challenge
+        dataset = newDataset.toList()
+        notifyItemChanged(position)
     }
 }

@@ -100,7 +100,7 @@ class SuggestionsFragment : Fragment(), UserFeedbackInterface {
     /**
      * Fonction d'instanciation de la RecyclerView
      */
-    private fun createChallengeList() {
+    fun createChallengeList() {
         var listChallenge = listOf(
             Challenge(1,"Courir 7 km","Sport", Periodicity.QUOTIDIEN, "Faire le tour du pâté de maison..."),
             Challenge(2,"Lire 50 pages par jour","Culture", Periodicity.QUOTIDIEN, "Choisissez un livre et lisez 50 pages chaque jour."),

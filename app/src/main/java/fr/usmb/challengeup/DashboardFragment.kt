@@ -155,7 +155,9 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
     /**
      * Fonction d'instanciation de la RecyclerView
      */
-    private fun createChallengeList() {
+    fun createChallengeList() {
+        val loading = vue.findViewById<LinearProgressIndicator>(R.id.dashboardChallengeListLoading)
+        loading.show()
         var listChallenge = listOf(
             Challenge(1,"Courir 7 km","Sport", Periodicity.QUOTIDIEN, "Faire le tour du pâté de maison..."),
             Challenge(2,"Lire 50 pages par jour","Culture", Periodicity.QUOTIDIEN, "Choisissez un livre et lisez 50 pages chaque jour."),
@@ -180,7 +182,6 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
                     recyclerView.adapter = ChallengeListAdapter(context!!, listChallenge, false)
                     val myChallenges = vue.findViewById<TextView>(R.id.myChallengesTitle)
                     myChallenges.text = "${listChallenge.size} challenge${if(listChallenge.size > 1) "s" else ""}"
-                    val loading = vue.findViewById<LinearProgressIndicator>(R.id.dashboardChallengeListLoading)
                     loading.hide()
                 }
             }
@@ -194,7 +195,6 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
                     recyclerView.adapter = ChallengeListAdapter(context!!, listChallenge, false)
                     val myChallenges = vue.findViewById<TextView>(R.id.myChallengesTitle)
                     myChallenges.text = "${listChallenge.size} challenge${if(listChallenge.size > 1) "s" else ""}"
-                    val loading = vue.findViewById<LinearProgressIndicator>(R.id.dashboardChallengeListLoading)
                     loading.hide()
                 }
             }
