@@ -14,7 +14,6 @@ import com.android.volley.Request.Method
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.snackbar.Snackbar
 import fr.usmb.challengeup.entities.Challenge
 import fr.usmb.challengeup.R
 import fr.usmb.challengeup.entities.User
@@ -71,15 +70,14 @@ class ChallengeListAdapter(
         }
 
         holder.removeButton.setOnClickListener {
-            if (isSuggestions)
-                report(challenge)
-            else showSnackbarMessage(holder.title, holder.removeButton.text.toString(), Snackbar.LENGTH_SHORT)
+            if (isSuggestions) report(challenge)
+            else unsubscribe(challenge)
         }
         
         holder.accomplishedButton.setOnClickListener {
             if (isSuggestions) {
                 subscribe(challenge)
-            } else showSnackbarMessage(holder.title, holder.accomplishedButton.text.toString(), Snackbar.LENGTH_SHORT)
+            } else showSnackbarMessage(holder.title, "Fonction d'achievement à revoir (mauvaise requête)")
         }
 
         if (challenge.reported) {
@@ -115,10 +113,10 @@ class ChallengeListAdapter(
         user = sharedPreferencesManager.getUserFromSharedPrefs()
         subscribeRequest(challenge, object : VolleyCallback {
             override fun onSuccess(result: String) {
-                TODO("Not yet implemented")
+                showToastMessage(context, "\"${challenge.title}\" a été ajouté à vos challenges.")
             }
             override fun onError() {
-                TODO("Not yet implemented")
+                showToastMessage(context, "Une erreur s'est produite...")
             }
         })
     }
@@ -126,7 +124,18 @@ class ChallengeListAdapter(
     /**
      * Retirer un challenge de sa liste de challenges
      */
-    private fun unsubscribe() {}
+    private fun unsubscribe(challenge: Challenge) {
+        val sharedPreferencesManager = SharedPreferencesManager(context)
+        user = sharedPreferencesManager.getUserFromSharedPrefs()
+        unsubscribeRequest(challenge, object : VolleyCallback {
+            override fun onSuccess(result: String) {
+                showToastMessage(context, "\"${challenge.title}\" a été retiré de vos challenges.")
+            }
+            override fun onError() {
+                showToastMessage(context, "Une erreur s'est produite...")
+            }
+        })
+    }
 
     /**
      * Signaler un challenge
@@ -170,13 +179,32 @@ class ChallengeListAdapter(
         val cid = challenge.id
         val url = "${context.getString(R.string.server_domain)}/user/$uid/subscribe/$cid"
 
-        // Manque la création d'un nouveau progès associé à l'utilisateur et à ce challenge côté back
+        val request = StringRequest(
+            Method.PUT, url,
+            { jsonUser -> callback.onSuccess(jsonUser.toString()) },
+            { error ->
+                showToastMessage(context, error.message.toString())
+                callback.onError()
+            }
+        )
+        queue.add(request)
     }
 
-    private fun unsubscribeRequest(callback: VolleyCallback) {
+    private fun unsubscribeRequest(challenge: Challenge, callback: VolleyCallback) {
         val queue = Volley.newRequestQueue(context)
+        val uid = user?.id
+        val cid = challenge.id
+        val url = "${context.getString(R.string.server_domain)}/user/$uid/unsubscribe/$cid"
 
-        // Manque la destruction du progès associé à l'utilisateur et à ce challenge côté back
+        val request = StringRequest(
+            Method.PUT, url,
+            { jsonUser -> callback.onSuccess(jsonUser.toString()) },
+            { error ->
+                showToastMessage(context, error.message.toString())
+                callback.onError()
+            }
+        )
+        queue.add(request)
     }
 
     private fun reportRequest(challenge: Challenge, callback: VolleyCallback) {
