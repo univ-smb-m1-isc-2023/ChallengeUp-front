@@ -25,6 +25,7 @@ import com.google.gson.reflect.TypeToken
 import fr.usmb.challengeup.adapter.ChallengeListAdapter
 import fr.usmb.challengeup.entities.Challenge
 import fr.usmb.challengeup.entities.Periodicity
+import fr.usmb.challengeup.entities.Progress
 import fr.usmb.challengeup.entities.User
 import fr.usmb.challengeup.network.VolleyCallback
 import fr.usmb.challengeup.utils.SharedPreferencesManager
@@ -136,7 +137,7 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
 
     private fun getMyChallengesRequest(callback: VolleyCallback) {
         val queue = Volley.newRequestQueue(context)
-        val url = "${getString(R.string.server_domain)}/challenge/user/${user?.id}"
+        val url = "${getString(R.string.server_domain)}/progress/user/${user?.id}"
 
         val request = object : StringRequest(
             Method.GET, url,
@@ -165,14 +166,14 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
             Challenge(7,"Apprendre une nouvelle langue","Culture", Periodicity.MENSUEL, "Choisissez une langue que vous aimeriez apprendre et consacrez du temps chaque jour à son apprentissage.")
         )
 
-        val listType = object : TypeToken<List<Challenge>>() {}.type // type de la liste
+        val listType = object : TypeToken<List<Progress>>() {}.type // type de la liste
         val gson = Gson()
         getMyChallengesRequest(object : VolleyCallback {
             override fun onSuccess(result: String) {
                 context?.let {
-                    val challengesFromServer = gson.fromJson<List<Challenge>>(result, listType)
-                    if (challengesFromServer.isNotEmpty())
-                        listChallenge = challengesFromServer
+                    val progressFromServer = gson.fromJson<List<Progress>>(result, listType)
+                    if (progressFromServer.isNotEmpty())
+                        listChallenge = progressFromServer.map { progress -> progress.challenge }
 
                     // Instanciation de la RecyclerView avec les données de la requête
                     val recyclerView = vue.findViewById<RecyclerView>(R.id.challengeList)
