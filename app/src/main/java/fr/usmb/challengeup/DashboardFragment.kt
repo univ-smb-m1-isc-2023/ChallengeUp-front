@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.volley.NetworkResponse
 import com.android.volley.Request
 import com.android.volley.Response
@@ -47,6 +48,7 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var vue: View
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private var user: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,6 +115,9 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
                 }
             }
         })
+
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshDashboard)
+        swipeRefreshLayout.setOnRefreshListener { createChallengeList() }
     }
 
     companion object {
@@ -183,6 +188,7 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
                     val myChallenges = vue.findViewById<TextView>(R.id.myChallengesTitle)
                     myChallenges.text = "${listChallenge.size} challenge${if(listChallenge.size > 1) "s" else ""}"
                     loading.hide()
+                    swipeRefreshLayout.isRefreshing = false
                 }
             }
 
@@ -196,6 +202,7 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
                     val myChallenges = vue.findViewById<TextView>(R.id.myChallengesTitle)
                     myChallenges.text = "${listChallenge.size} challenge${if(listChallenge.size > 1) "s" else ""}"
                     loading.hide()
+                    swipeRefreshLayout.isRefreshing = false
                 }
             }
         })

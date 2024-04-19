@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.volley.NetworkResponse
 import com.android.volley.Request
 import com.android.volley.Response
@@ -36,6 +37,7 @@ class SuggestionsFragment : Fragment(), UserFeedbackInterface {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var vue: View
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +60,9 @@ class SuggestionsFragment : Fragment(), UserFeedbackInterface {
 
         vue = view
         createChallengeList()
+
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshSuggestions)
+        swipeRefreshLayout.setOnRefreshListener { createChallengeList() }
     }
 
     companion object {
@@ -126,6 +131,7 @@ class SuggestionsFragment : Fragment(), UserFeedbackInterface {
                     val recyclerView = vue.findViewById<RecyclerView>(R.id.suggestedChallengeList)
                     recyclerView.adapter = ChallengeListAdapter(context!!, listChallenge, true)
                     loading.hide()
+                    swipeRefreshLayout.isRefreshing = false
                 }
             }
 
@@ -137,6 +143,7 @@ class SuggestionsFragment : Fragment(), UserFeedbackInterface {
                     val recyclerView = vue.findViewById<RecyclerView>(R.id.suggestedChallengeList)
                     recyclerView.adapter = ChallengeListAdapter(context!!, listChallenge, false)
                     loading.hide()
+                    swipeRefreshLayout.isRefreshing = false
                 }
             }
         })
