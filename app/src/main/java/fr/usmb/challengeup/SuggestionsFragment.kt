@@ -108,18 +108,10 @@ class SuggestionsFragment : Fragment(), UserFeedbackInterface {
     fun createChallengeList() {
         val loading = vue.findViewById<LinearProgressIndicator>(R.id.suggestionsChallengeListLoading)
         loading.show()
-        var listChallenge = listOf(
-            Challenge(1,"Courir 7 km","Sport", Periodicity.QUOTIDIEN, "Faire le tour du pâté de maison..."),
-            Challenge(2,"Lire 50 pages par jour","Culture", Periodicity.QUOTIDIEN, "Choisissez un livre et lisez 50 pages chaque jour."),
-            Challenge(3,"Méditer pendant 15 minutes","Sport", Periodicity.QUOTIDIEN, "Trouvez un endroit calme et méditez pendant 15 minutes."),
-            Challenge(4,"Apprendre une nouvelle recette","Cuisine", Periodicity.HEBDOMADAIRE, "Choisissez une recette que vous n'avez jamais essayée et apprenez à la cuisiner."),
-            Challenge(5,"Écrire un journal","Culture", Periodicity.QUOTIDIEN, "Prenez le temps de réfléchir à votre journée et écrivez vos pensées dans un journal."),
-            Challenge(6,"Faire 10000 pas","Sport", Periodicity.QUOTIDIEN, "Marchez ou courez jusqu'à atteindre 10000 pas."),
-            Challenge(7,"Apprendre une nouvelle langue","Culture", Periodicity.MENSUEL, "Choisissez une langue que vous aimeriez apprendre et consacrez du temps chaque jour à son apprentissage.")
-        )
-
+        var listChallenge = emptyList<Challenge>()
         val listType = object : TypeToken<List<Challenge>>() {}.type // type de la liste
         val gson = Gson()
+
         getSuggestedChallengesRequest(object : VolleyCallback {
             override fun onSuccess(result: String) {
                 context?.let {
@@ -134,7 +126,6 @@ class SuggestionsFragment : Fragment(), UserFeedbackInterface {
                     swipeRefreshLayout.isRefreshing = false
                 }
             }
-
             override fun onError() {
                 context?.let {
                     showToastMessage(it, "Erreur serveur...")
