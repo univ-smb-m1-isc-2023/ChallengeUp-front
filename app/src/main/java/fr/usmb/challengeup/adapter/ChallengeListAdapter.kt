@@ -106,6 +106,7 @@ class ChallengeListAdapter(
         achievementRequest(challenge, object : VolleyCallback {
             override fun onSuccess(result: String) {
                 showToastMessage(context, "Challenge complété pour la peridode indiquée.")
+                challenge.completed = true
                 updateFromRecyclerView(challenge)
             }
             override fun onError() {}
