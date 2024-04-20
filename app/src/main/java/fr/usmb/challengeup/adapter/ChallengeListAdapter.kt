@@ -80,16 +80,16 @@ class ChallengeListAdapter(
             } else achievement(challenge)
         }
 
-        if (challenge.reported) {
-            if (isSuggestions) {
-                holder.cardChallenge.setCardBackgroundColor(Color.parseColor("#50FF0000"))
-                holder.accomplishedButton.visibility = View.GONE
-                holder.title.text = "[SIGNALE] ${holder.title.text}"
-            } else {
-                holder.cardChallenge.setCardBackgroundColor(Color.parseColor("#5000FF00"))
-                holder.accomplishedButton.visibility = View.GONE
-                holder.title.text = "[ACCOMPLI] ${holder.title.text}"
-            }
+        if (challenge.reported && isSuggestions) {
+            holder.cardChallenge.setCardBackgroundColor(Color.parseColor("#50FF0000"))
+            holder.accomplishedButton.visibility = View.GONE
+            holder.title.text = "[SIGNALE] ${holder.title.text}"
+        }
+
+        if (challenge.completed && !isSuggestions) {
+            holder.cardChallenge.setCardBackgroundColor(Color.parseColor("#5000FF00"))
+            holder.accomplishedButton.visibility = View.GONE
+            holder.title.text = "[ACCOMPLI] ${holder.title.text}"
         }
     }
 

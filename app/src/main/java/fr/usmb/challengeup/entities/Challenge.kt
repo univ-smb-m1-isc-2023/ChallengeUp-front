@@ -17,7 +17,8 @@ data class Challenge(
     val tag: String,
     val periodicity: Periodicity,
     val description: String,
-    var reported: Boolean = false
+    var reported: Boolean = false,
+    var completed: Boolean = false
 ){
 
     /**
