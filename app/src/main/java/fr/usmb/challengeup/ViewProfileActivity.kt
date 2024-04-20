@@ -14,7 +14,6 @@ import fr.usmb.challengeup.network.VolleyCallback
 import fr.usmb.challengeup.utils.SharedPreferencesManager
 import fr.usmb.challengeup.utils.UserFeedbackInterface
 import org.json.JSONObject
-import kotlin.random.Random
 
 class ViewProfileActivity : AppCompatActivity(), UserFeedbackInterface {
     private lateinit var user: User

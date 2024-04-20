@@ -2,7 +2,6 @@ package fr.usmb.challengeup
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import androidx.core.content.ContextCompat
 import com.android.volley.Request
