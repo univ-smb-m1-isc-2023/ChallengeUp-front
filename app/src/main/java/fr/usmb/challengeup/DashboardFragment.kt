@@ -156,6 +156,10 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
                     var progressFromServer = gson.fromJson<List<Progress>>(result, listType)
                     if (progressFromServer.isNotEmpty()) {
                         progressFromServer = progressFromServer.sortedBy { progress -> progress.completed }
+                        // mise à true de reported pour les challenges complétés (c'est juste de l'affichage)
+                        for (progress in progressFromServer)
+                            if (progress.completed)
+                                progress.challenge.reported= true
                         listChallenge = progressFromServer.map { progress -> progress.challenge }
 
                         val jsonResult = JSONArray(result)

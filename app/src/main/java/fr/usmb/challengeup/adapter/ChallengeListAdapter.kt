@@ -81,9 +81,15 @@ class ChallengeListAdapter(
         }
 
         if (challenge.reported) {
-            holder.cardChallenge.setCardBackgroundColor(Color.parseColor("#50FF0000"))
-            holder.accomplishedButton.visibility = View.GONE
-            holder.title.text = "[SIGNALE] ${holder.title.text}"
+            if (isSuggestions) {
+                holder.cardChallenge.setCardBackgroundColor(Color.parseColor("#50FF0000"))
+                holder.accomplishedButton.visibility = View.GONE
+                holder.title.text = "[SIGNALE] ${holder.title.text}"
+            } else {
+                holder.cardChallenge.setCardBackgroundColor(Color.parseColor("#5000FF00"))
+                holder.accomplishedButton.visibility = View.GONE
+                holder.title.text = "[ACCOMPLI] ${holder.title.text}"
+            }
         }
     }
 
@@ -147,7 +153,7 @@ class ChallengeListAdapter(
         reportRequest(challenge, object : VolleyCallback {
             override fun onSuccess(result: String) {
                 showToastMessage(context, "Ce challenge a bien été signalé")
-                challenge.reported = !challenge.reported
+                challenge.reported = true
                 updateFromRecyclerView(challenge)
             }
             override fun onError() {
