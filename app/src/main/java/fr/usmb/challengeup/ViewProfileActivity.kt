@@ -88,7 +88,9 @@ class ViewProfileActivity : AppCompatActivity(), UserFeedbackInterface {
         title = "Profil de ${user.username}"
 
         val profileUsername = findViewById<TextView>(R.id.profileUsername)
-        profileUsername.text = "${user.username} #${user.id}"
+        if(user.id > 0) profileUsername.text = "${user.username} #${user.id}"
+        else profileUsername.text = user.username
+
         val profileEmail = findViewById<TextView>(R.id.profileEmail)
         profileEmail.text = email
         val profileRegularity = findViewById<TextView>(R.id.profileRegularityValue)
@@ -96,8 +98,7 @@ class ViewProfileActivity : AppCompatActivity(), UserFeedbackInterface {
 
         val progressIndicator = findViewById<CircularProgressIndicator>(R.id.profileProgressRegularity)
         progressIndicator.trackColor = Color.LTGRAY
-        var progessAnimatorValue = Random.nextInt(10, 101)
-        if (regularity > 0) progessAnimatorValue = regularity.toInt()
+        val progessAnimatorValue = regularity.toInt()
 
         if (progessAnimatorValue < 50) progressIndicator.setIndicatorColor(Color.RED)
         else progressIndicator.setIndicatorColor(Color.GREEN)

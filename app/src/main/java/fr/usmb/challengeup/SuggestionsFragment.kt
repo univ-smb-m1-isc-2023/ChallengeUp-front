@@ -88,6 +88,7 @@ class SuggestionsFragment : Fragment(), UserFeedbackInterface {
     private fun getSuggestedChallengesRequest(callback: VolleyCallback) {
         val queue = Volley.newRequestQueue(context)
         val url = "${getString(R.string.server_domain)}/challenge/all"
+        // val url = "${getString(R.string.server_domain)}/challenge/highestProgress" // marche très bien mais peu de données encore
 
         val request = object : StringRequest(
             Method.GET, url,
@@ -116,8 +117,10 @@ class SuggestionsFragment : Fragment(), UserFeedbackInterface {
             override fun onSuccess(result: String) {
                 context?.let {
                     val challengesFromServer = gson.fromJson<List<Challenge>>(result, listType)
-                    if (challengesFromServer.isNotEmpty())
+                    if (challengesFromServer.isNotEmpty()) {
                         listChallenge = challengesFromServer
+                        listChallenge = listChallenge.sortedBy { challenge -> challenge.reported }
+                    }
 
                     // Instanciation de la RecyclerView avec les données de la requête
                     val recyclerView = vue.findViewById<RecyclerView>(R.id.suggestedChallengeList)

@@ -13,7 +13,6 @@ import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.volley.NetworkResponse
-import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.StringRequest
@@ -25,13 +24,12 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import fr.usmb.challengeup.adapter.ChallengeListAdapter
 import fr.usmb.challengeup.entities.Challenge
-import fr.usmb.challengeup.entities.Periodicity
 import fr.usmb.challengeup.entities.Progress
 import fr.usmb.challengeup.entities.User
 import fr.usmb.challengeup.network.VolleyCallback
 import fr.usmb.challengeup.utils.SharedPreferencesManager
 import fr.usmb.challengeup.utils.UserFeedbackInterface
-import kotlin.random.Random
+import org.json.JSONArray
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -69,28 +67,14 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        vue = view
 
         val sharedPreferencesManager = context?.let { SharedPreferencesManager(it) }
         if (sharedPreferencesManager != null) {
             user = sharedPreferencesManager.getUserFromSharedPrefs()
         }
 
-        val progressIndicator = view.findViewById<CircularProgressIndicator>(R.id.progressRegularity)
-        progressIndicator.trackColor = Color.LTGRAY
-        var progessAnimatorValue = Random.nextInt(10, 101)
-        if (progessAnimatorValue < 50) progressIndicator.setIndicatorColor(Color.RED)
-        else progressIndicator.setIndicatorColor(Color.GREEN)
-        val progressAnimator = ValueAnimator.ofInt(0, progessAnimatorValue).apply {
-            duration = 1500 // Durée de l'animation en millisecondes
-            addUpdateListener { animation ->
-                val progress = animation.animatedValue as Int
-                progressIndicator.setProgressCompat(progress, false)
-            }
-        }
-        progressAnimator.start()
-
-        val progressComment = view.findViewById<TextView>(R.id.progressComment)
-        if (progessAnimatorValue < 50) progressComment.text = getString(R.string.encouragement)
+        updateRegularity(0.0)
 
         val newChallengeButton = view.findViewById<ExtendedFloatingActionButton>(R.id.newChallengeFAB)
         newChallengeButton.setOnClickListener {
@@ -98,7 +82,6 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
             startActivity(intent)
         }
 
-        vue = view
         createChallengeList()
 
         val nestedScrollView = vue.findViewById<NestedScrollView>(R.id.dashboardNestedScrollView)
@@ -170,15 +153,25 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
         getMyChallengesRequest(object : VolleyCallback {
             override fun onSuccess(result: String) {
                 context?.let {
-                    val progressFromServer = gson.fromJson<List<Progress>>(result, listType)
-                    if (progressFromServer.isNotEmpty())
+                    var progressFromServer = gson.fromJson<List<Progress>>(result, listType)
+                    if (progressFromServer.isNotEmpty()) {
+                        progressFromServer = progressFromServer.sortedBy { progress -> progress.completed }
                         listChallenge = progressFromServer.map { progress -> progress.challenge }
+
+                        val jsonResult = JSONArray(result)
+                        val jsonFirstProgressUser = jsonResult.getJSONObject(0).getJSONObject("user")
+                        val regularity = jsonFirstProgressUser.getDouble("regularity")
+                        updateRegularity(regularity)
+                    }
 
                     // Instanciation de la RecyclerView avec les données de la requête
                     val recyclerView = vue.findViewById<RecyclerView>(R.id.challengeList)
                     recyclerView.adapter = ChallengeListAdapter(context!!, listChallenge, false)
                     val myChallenges = vue.findViewById<TextView>(R.id.myChallengesTitle)
-                    myChallenges.text = "${listChallenge.size} challenge${if(listChallenge.size > 1) "s" else ""}"
+                    if (listChallenge.isNotEmpty())
+                        myChallenges.text = "${listChallenge.size} challenge${if(listChallenge.size > 1) "s" else ""}"
+                    else
+                        myChallenges.text = "Créez un challenge ou ajoutez-en un depuis les suggestions"
                     loading.hide()
                     swipeRefreshLayout.isRefreshing = false
                 }
@@ -197,5 +190,25 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
                 }
             }
         })
+    }
+
+    private fun updateRegularity(regularity: Double) {
+        val progressIndicator = vue.findViewById<CircularProgressIndicator>(R.id.progressRegularity)
+        progressIndicator.trackColor = Color.LTGRAY
+        val progessAnimatorValue = regularity.toInt()
+        if (progessAnimatorValue < 50) progressIndicator.setIndicatorColor(Color.RED)
+        else progressIndicator.setIndicatorColor(Color.GREEN)
+        val progressAnimator = ValueAnimator.ofInt(0, progessAnimatorValue).apply {
+            duration = 1500 // Durée de l'animation en millisecondes
+            addUpdateListener { animation ->
+                val progress = animation.animatedValue as Int
+                progressIndicator.setProgressCompat(progress, false)
+            }
+        }
+        progressAnimator.start()
+
+        val progressComment = vue.findViewById<TextView>(R.id.progressComment)
+        if (regularity < 50) progressComment.text = getString(R.string.encouragement)
+        else progressComment.text = getString(R.string.congratulations)
     }
 }
