@@ -30,6 +30,10 @@ import fr.usmb.challengeup.network.VolleyCallback
 import fr.usmb.challengeup.utils.SharedPreferencesManager
 import fr.usmb.challengeup.utils.UserFeedbackInterface
 import org.json.JSONArray
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -156,10 +160,12 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
                     var progressFromServer = gson.fromJson<List<Progress>>(result, listType)
                     if (progressFromServer.isNotEmpty()) {
                         progressFromServer = progressFromServer.sortedBy { progress -> progress.completed }
-                        // mise à true de reported pour les challenges complétés (c'est juste de l'affichage)
-                        for (progress in progressFromServer)
+                        for (progress in progressFromServer) {
                             if (progress.completed)
                                 progress.challenge.completed = true
+
+                            progress.challenge.description += "\n\nDernière activité : le ${formatFrenchDate(progress.date)}"
+                        }
                         listChallenge = progressFromServer.map { progress -> progress.challenge }
 
                         val jsonResult = JSONArray(result)
@@ -214,5 +220,11 @@ class DashboardFragment : Fragment(), UserFeedbackInterface {
         val progressComment = vue.findViewById<TextView>(R.id.progressComment)
         if (regularity < 50) progressComment.text = getString(R.string.encouragement)
         else progressComment.text = getString(R.string.congratulations)
+    }
+
+    private fun formatFrenchDate(date: String): String {
+        val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy 'à' HH'h'mm", Locale.FRANCE)
+        val zonedDateTime = ZonedDateTime.parse(date)
+        return formatter.format(zonedDateTime.withZoneSameInstant(ZoneId.systemDefault()))
     }
 }
