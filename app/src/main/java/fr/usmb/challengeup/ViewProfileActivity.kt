@@ -1,10 +1,14 @@
 package fr.usmb.challengeup
 
 import android.animation.ValueAnimator
+import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.OvalShape
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.android.volley.Request.Method
@@ -12,12 +16,16 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.google.android.material.shape.CornerFamily
+import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import fr.usmb.challengeup.entities.Challenge
 import fr.usmb.challengeup.entities.Progress
 import fr.usmb.challengeup.entities.User
 import fr.usmb.challengeup.network.VolleyCallback
+import fr.usmb.challengeup.utils.DownloadImageTask
 import fr.usmb.challengeup.utils.SharedPreferencesManager
 import fr.usmb.challengeup.utils.UserFeedbackInterface
 import org.json.JSONArray
@@ -146,7 +154,11 @@ class ViewProfileActivity : AppCompatActivity(), UserFeedbackInterface {
                     .eachCount()
                     .maxByOrNull { map -> map.value }
                     ?.key
-                popularCategory.text = "Catégorie favorite : $mostPopularCategory"
+                if (mostPopularCategory != null)
+                    popularCategory.text = "Catégorie favorite : $mostPopularCategory"
+                else
+                    popularCategory.visibility = View.GONE
+                displayCategoryPicture(mostPopularCategory)
                 if (usernameToVisit != null) {
                     numberOfChallenges.visibility = View.VISIBLE
                     numberOfChallenges.text = "${user.username} a souscrit à ${progressList.size} " +
@@ -175,5 +187,35 @@ class ViewProfileActivity : AppCompatActivity(), UserFeedbackInterface {
             progressList.add(progress)
         }
         return progressList.toList()
+    }
+
+    private fun displayCategoryPicture(category: String?) {
+        val popularCategoryPic = findViewById<ImageView>(R.id.profilePicturePopularCategory)
+        if (category.isNullOrBlank()) {
+            popularCategoryPic.visibility = View.GONE
+            return
+        }
+        val url: String
+        when (category) {
+            "Sport" -> url = "https://static.data.gouv.fr/images/2015-01-22/2578753de17a456a85422d14d31ea289/Sport_balles.png"
+            "Cuisine" -> url = "https://resize.programme-television.org/original/var/premiere/storage/images/tele-7-jours/news-tv/furieux-contre-un-restaurateur-philippe-etchebest-claque-la-porte-de-cauchemar-en-cuisine-ce-mec-n-en-a-rien-a-secouer-4682958/99713581-1-fre-FR/Furieux-contre-un-restaurateur-Philippe-Etchebest-claque-la-porte-de-Cauchemar-en-cuisine-Ce-mec-n-en-a-rien-a-secouer.png"
+            else -> url = "https://absolumentchats.com/wp-content/uploads/2016/12/35927559_web-1-1.jpg"
+        }
+        DownloadImageTask(popularCategoryPic).downloadImage(url)
+
+        // image arrondie
+        val radius = 60f
+        val shapeAppearanceModel = ShapeAppearanceModel()
+            .toBuilder()
+            .setAllCorners(CornerFamily.ROUNDED, radius)
+            .build()
+
+        val shapeDrawable = ShapeDrawable(OvalShape())
+        shapeDrawable.paint.color = Color.WHITE
+        val backgroundDrawable = MaterialShapeDrawable(shapeAppearanceModel).apply {
+            fillColor = ColorStateList.valueOf(Color.WHITE)
+        }
+        popularCategoryPic.background = backgroundDrawable
+        popularCategoryPic.clipToOutline = true
     }
 }

@@ -36,7 +36,7 @@
     <string name="subscribe">Souscrire</string>
     <string name="report">Signaler</string>
     <!-- navigation_drawer.xml : Drawer -->
-    <string name="watchProfileDrawer">Consulter un profil via une URL</string>
+    <string name="watchProfileDrawer">Consulter un profil public</string>
     <string name="settingsDrawer">Paramètres</string>
     <string name="setPublicProfileDrawer">Rendre mon profil public ou privé</string>
     <string name="disconnect">Se déconnecter</string>

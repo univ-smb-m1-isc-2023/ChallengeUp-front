@@ -63,6 +63,13 @@
             android:layout_marginTop="16dp"
             android:textAppearance="?attr/textAppearanceBodyLarge"
             android:text="@string/popularChallenges" />
+        <ImageView
+            android:id="@+id/profilePicturePopularCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/ic_launcher_foreground"
+            android:scaleType="centerCrop" />
     </LinearLayout>
 
 </LinearLayout>
