@@ -41,4 +41,28 @@
         android:textStyle="italic"
         android:text="@string/regularity" />
 
+    <LinearLayout
+        android:id="@+id/profileOtherInfosLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/profileNumberOfChallenges"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:text="@string/myChallenges" />
+        <TextView
+            android:id="@+id/profilePopularCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:text="@string/popularChallenges" />
+    </LinearLayout>
+
 </LinearLayout>

@@ -4,15 +4,23 @@ import android.animation.ValueAnimator
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
+import com.android.volley.Request.Method
 import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
+import fr.usmb.challengeup.entities.Challenge
+import fr.usmb.challengeup.entities.Progress
 import fr.usmb.challengeup.entities.User
 import fr.usmb.challengeup.network.VolleyCallback
 import fr.usmb.challengeup.utils.SharedPreferencesManager
 import fr.usmb.challengeup.utils.UserFeedbackInterface
+import org.json.JSONArray
 import org.json.JSONObject
 
 class ViewProfileActivity : AppCompatActivity(), UserFeedbackInterface {
@@ -30,8 +38,6 @@ class ViewProfileActivity : AppCompatActivity(), UserFeedbackInterface {
             val sharedPreferencesManager = SharedPreferencesManager(applicationContext)
             user = sharedPreferencesManager.getUserFromSharedPrefs()!!
         } else {
-            // évidemment à instancier avec les vraies informations du gars qu'on visite
-            // mais pour l'instant, il n'y a qu'un User en base donc bon...
             user = User(-1, usernameToVisit, null, null)
         }
 
@@ -39,7 +45,9 @@ class ViewProfileActivity : AppCompatActivity(), UserFeedbackInterface {
         user.username?.let {
             watchProfileRequest(it, object : VolleyCallback {
                 override fun onSuccess(result: String) {
-                    initActivity(JSONObject(result))
+                    val jsonUser = JSONObject(result)
+                    initActivity(jsonUser)
+                    displayOtherInfos(jsonUser.getLong("id"))
                 }
                 override fun onError() {
                     Snackbar.make(profileUsername, "Vous n'avez rien à faire ici", Snackbar.LENGTH_INDEFINITE)
@@ -81,14 +89,25 @@ class ViewProfileActivity : AppCompatActivity(), UserFeedbackInterface {
         queue.add(request)
     }
 
+    private fun getUserProgressRequest(uid: Long, callback: VolleyCallback) {
+        val queue = Volley.newRequestQueue(applicationContext)
+        val url = "${getString(R.string.server_domain)}/progress/user/$uid"
+
+        val request = StringRequest(
+            Method.GET, url,
+            { jsonProgress -> callback.onSuccess(jsonProgress.toString()) },
+            { callback.onError() }
+        )
+        queue.add(request)
+    }
+
     private fun initActivity(jsonUser: JSONObject) {
         regularity = jsonUser.getDouble("regularity")
         email = jsonUser.getString("email")
         title = "Profil de ${user.username}"
 
         val profileUsername = findViewById<TextView>(R.id.profileUsername)
-        if(user.id > 0) profileUsername.text = "${user.username} #${user.id}"
-        else profileUsername.text = user.username
+        profileUsername.text = user.username
 
         val profileEmail = findViewById<TextView>(R.id.profileEmail)
         profileEmail.text = email
@@ -110,5 +129,51 @@ class ViewProfileActivity : AppCompatActivity(), UserFeedbackInterface {
             }
         }
         progressAnimator.start()
+    }
+
+    private fun displayOtherInfos(uid: Long) {
+        val otherInfosLayout = findViewById<LinearLayout>(R.id.profileOtherInfosLayout)
+        otherInfosLayout.visibility = View.VISIBLE
+        val popularCategory = findViewById<TextView>(R.id.profilePopularCategory)
+        val numberOfChallenges = findViewById<TextView>(R.id.profileNumberOfChallenges)
+
+        getUserProgressRequest(uid, object : VolleyCallback {
+            override fun onSuccess(result: String) {
+                val jsonProgress = JSONArray(result)
+                val progressList = getListProgressFromJSON(jsonProgress)
+                val mostPopularCategory : String? = progressList
+                    .groupingBy { progress -> progress.challenge.tag }
+                    .eachCount()
+                    .maxByOrNull { map -> map.value }
+                    ?.key
+                popularCategory.text = "Catégorie favorite : $mostPopularCategory"
+                if (usernameToVisit != null) {
+                    numberOfChallenges.visibility = View.VISIBLE
+                    numberOfChallenges.text = "${user.username} a souscrit à ${progressList.size} " +
+                            "challenge${if (progressList.size > 1) "s" else ""}"
+                }
+            }
+            override fun onError() {
+                showSnackbarMessage(otherInfosLayout, "Aucune information supplémentaire à afficher")
+                otherInfosLayout.visibility = View.GONE
+            }
+        })
+    }
+
+    private fun getListProgressFromJSON(jsonProgress: JSONArray): List<Progress> {
+        val progressList = mutableListOf<Progress>()
+        for (i in 0 until jsonProgress.length()) {
+            val jsonObj = jsonProgress.getJSONObject(i)
+            val gson = Gson()
+            val progress = Progress(
+                jsonObj.getLong("id"),
+                jsonObj.getString("date"),
+                gson.fromJson(jsonObj.getJSONObject("challenge").toString(), Challenge::class.java),
+                gson.fromJson(jsonObj.getJSONObject("user").toString(), User::class.java),
+                jsonObj.getBoolean("completed")
+            )
+            progressList.add(progress)
+        }
+        return progressList.toList()
     }
 }

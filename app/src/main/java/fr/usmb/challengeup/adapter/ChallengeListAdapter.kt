@@ -89,7 +89,6 @@ class ChallengeListAdapter(
         if (challenge.completed && !isSuggestions) {
             holder.cardChallenge.setCardBackgroundColor(Color.parseColor("#5000FF00"))
             holder.accomplishedButton.visibility = View.GONE
-            holder.title.text = "[ACCOMPLI] ${holder.title.text}"
         }
     }
 
