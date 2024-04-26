@@ -57,8 +57,9 @@ class NewAccountActivity : AppCompatActivity(), UserFeedbackInterface {
                 override fun onError() {
                     showSnackbarMessage(
                         stayConnectedSwitch,
-                        "Un utilisateur avec ce nom d'utilisateur ou cet email existe déjà"
+                        "Bienvenue, ${newUser.username}"
                     )
+                    finish()
                 }
             })
         } else showSnackbarMessage(view, "Il manque des informations ou certaines données sont fausses.")
